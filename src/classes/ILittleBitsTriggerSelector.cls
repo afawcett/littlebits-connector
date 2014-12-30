@@ -26,5 +26,5 @@
 
 public interface ILittleBitsTriggerSelector extends fflib_ISObjectSelector {
 	List<LittleBitsTrigger__c> selectById(Set<ID> idSet);
-	List<LittleBitsTrigger__c> selectActiveByRecordId(Set<Id> idSet);
+	List<LittleBitsTrigger__c> selectActiveByRecordId(Set<String> recordIds);
 }

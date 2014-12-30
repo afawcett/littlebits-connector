@@ -58,10 +58,10 @@ public class LittleBitsTriggerSelector extends fflib_SObjectSelector
 		return (List<LittleBitsTrigger__c>) selectSObjectsById(idSet);
 	}
 
-	public List<LittleBitsTrigger__c> selectActiveByRecordId(Set<Id> idSet) 
+	public List<LittleBitsTrigger__c> selectActiveByRecordId(Set<String> recordIds) 
 	{
 		return (List<LittleBitsTrigger__c>)
 			Database.query(
-				newQueryFactory().setCondition('Active__c = true And RecordID__c in :idSet').toSOQL());
+				newQueryFactory().setCondition('Active__c = true And RecordID__c in :recordIds').toSOQL());
 	}
 }

@@ -53,10 +53,13 @@ global class LittleBitsService {
 
 		// Any of these records relate to a little bit trigger?
 		Set<Id> updatedRecordIds = newMap.keySet();
+		Set<String> updatedRecordIdsTruncated = new Set<String>();
+		for(Id updatedRecord : updatedRecordIds)
+			updatedRecordIdsTruncated.add(((String)updatedRecord).substring(0,15));
 		ILittleBitsTriggerSelector lbtSelector = 
 			(ILittleBitsTriggerSelector) 
 				Application.Selector.newInstance(LittleBitsTrigger__c.SObjectType);
-		List<LittleBitsTrigger__c> lbTriggers = lbtSelector.selectActiveByRecordId(updatedRecordIds);
+		List<LittleBitsTrigger__c> lbTriggers = lbtSelector.selectActiveByRecordId(updatedRecordIdsTruncated);
 		if(lbTriggers.size()>0) {
 			List<LittleBitsTrigger__c> triggersToFire = new List<LittleBitsTrigger__c>();
 			for(LittleBitsTrigger__c lbTrigger : lbTriggers) {
