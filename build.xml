@@ -1,0 +1,15 @@
+<project name="littlebits-connector" default="generate.apex.mocks">
+
+	<target name="generate.apex.mocks">
+		<java classname="com.financialforce.apexmocks.ApexMockGenerator">
+			<classpath>
+				<pathelement location="${basedir}/bin/apex-mocks-generator-3.1.0.jar"/>
+			</classpath>
+			<arg value="${basedir}/src/classes"/>
+			<arg value="${basedir}/interfacemocks.properties"/>
+			<arg value="Mocks"/>
+			<arg value="${basedir}/src/classes"/>
+		</java>
+	</target>
+	
+</project>

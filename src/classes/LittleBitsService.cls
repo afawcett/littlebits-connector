@@ -67,7 +67,20 @@ global class LittleBitsService {
 				List<String> fields = lbTrigger.WhenFieldsModified__c.split(',');
 				SObject oldRecord = oldMap.get(lbTrigger.RecordID__c);
 				SObject newRecord = newMap.get(lbTrigger.RecordID__c);
-				triggersToFire.add(lbTrigger);
+				Boolean modified = false;
+				for(String field : fields)
+				{
+					field = field.trim();
+					Object oldValue = oldRecord.get(field);
+					Object newValue = newRecord.get(field);
+					if(!oldValue.equals(newValue))
+					{
+						modified = true;
+						break;
+					}
+				}
+				if(modified)
+					triggersToFire.add(lbTrigger);
 			}
 			// Enqueue a job to output to the device/s?
 			if(triggersToFire.size()>0)

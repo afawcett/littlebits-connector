@@ -24,8 +24,27 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-public interface ILittleBitsTriggerSelector extends fflib_ISObjectSelector 
+@isTest
+public class Mocks
 {
-	List<LittleBitsTrigger__c> selectById(Set<ID> idSet);
-	List<LittleBitsTrigger__c> selectActiveByRecordId(Set<String> recordIds);
+	public class LittleBitsTriggerSelector extends fflib_SObjectMocks.SObjectSelector implements ILittleBitsTriggerSelector
+	{
+		private fflib_ApexMocks mocks;
+
+		public LittleBitsTriggerSelector(fflib_ApexMocks mocks)
+		{
+			super(mocks);
+			this.mocks = mocks;
+		}
+
+		public List<LittleBitsTrigger__c> selectById(Set<ID> idSet)
+		{
+			return (List<LittleBitsTrigger__c>) mocks.mockNonVoidMethod(this, 'selectById', new List<Object> {idSet});
+		}
+
+		public List<LittleBitsTrigger__c> selectActiveByRecordId(Set<String> recordIds)
+		{
+			return (List<LittleBitsTrigger__c>) mocks.mockNonVoidMethod(this, 'selectActiveByRecordId', new List<Object> {recordIds});
+		}
+	}
 }
