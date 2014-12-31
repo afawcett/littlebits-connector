@@ -1,7 +1,7 @@
 littlebits-connector
 ====================
 
-Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without code! Based on the Apex LittleBits API [here](https://github.com/afawcett/littlebits-connector). Currently outputs to LittleBits devices when records in standard or custom objects are updated. Upcoming features to subscribe to LittleBits device output and run headless Flows!
+Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without code! Based on the **Apex LittleBits API** [here](https://github.com/afawcett/littlebits-connector). Currently outputs to LittleBits devices when records in standard or custom objects are updated. Upcoming features to subscribe to LittleBits device output and run headless Flows!
 
 Packages
 ========
