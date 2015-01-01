@@ -8,8 +8,10 @@ Package Install
 
 You can install this connector as managed "AppExchange" package more easily.
 
-Version 1.0
------------
+Version 1.0 - Beta
+------------------
+
+**IMPORTANT NOTE:** This is a Beta status package, it still needs more work to work to make it more robust, work within platform limits and utilise new features of the platform at this time i don't have available to me. So for now please feel free to use in your demo orgs or sandboxes, have fun and give some feedback!
 
 This version supports **LittleBits Triggers** and allows you to output to a device from any custom or standard object based on a given field or fields changing. The percent and duration of the output can be driven by fields on the record. For example Opportunity object based on the Probability changing updates your device!
 
