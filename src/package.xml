@@ -33,6 +33,10 @@
 		<members>*</members>
 		<name>CustomTab</name>
 	</types>
+ 	<types>
+        <members>*</members>
+        <name>CustomLabels</name>
+    </types>	
 	<types>
 		<members>LittleBitsTrigger__c-LittleBits Trigger Layout</members>
 		<name>Layout</name>
