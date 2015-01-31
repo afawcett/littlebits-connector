@@ -27,6 +27,16 @@
 global class LittleBitsService {
 
 	/**
+	 * Information describing device and data to send
+	 **/
+	global class DeviceOutput {
+		global String AccessToken {get;set;}
+        global String DeviceId {get;set;}
+        global Integer Percent {get;set;}
+        global Integer DurationMs {get;set;}
+	}
+
+	/**
 	 * Check this service can connect to the Metadata API when needed
 	 **/
 	global static Boolean checkMetadataAPIConnection()
@@ -47,7 +57,21 @@ global class LittleBitsService {
 	}
 
 	/**
-	 * Determine if the given records should result in a LittleBit trigger executing
+	 * Send parcent for the given duration to the given device
+	 **/
+	global static void send(List<DeviceOutput> deviceOutputs) {
+		// NOTE: LittleBits Cloud API is not bulkified, maybe one day it will be!
+		for(DeviceOutput deviceOutput : deviceOutputs) {
+	        LittleBits lb = deviceOutput.AccessToken != null ? 
+	        	new LittleBits(deviceOutput.AccessToken) : new LittleBits();
+			LittleBIts.Device device = deviceOutput.DeviceId != null ? 
+				lb.getDevice(deviceOutput.DeviceId) : lb.getDevice();
+			device.output(deviceOutput.Percent, deviceOutput.DurationMs);			
+		}
+	}
+
+	/**
+	 * Determine if the given records should result in a LittleBit trigger executing (requires LittleBitsTrigger__c setup)
 	 **/
 	global static void triggerHandler(Map<Id, SObject> oldMap, Map<Id, SObject> newMap) {
 
@@ -109,7 +133,7 @@ global class LittleBitsService {
 					// Access token and Device Id can be null, if so the LittleBits Apex client API will retrieve from a custom setting
 					String accessToken = lbTrigger.AccessToken__c;
 					String deviceId = lbTrigger.DeviceID__c;
-					send(accessToken, deviceId, percent, durationMs);
+					sendFuture(accessToken, deviceId, percent, durationMs);
 					// lbtJob.addOutput(accessToken, deviceId, percent, durationMs);
 				}
 				// System.enqueueJob((lbtJob));
@@ -118,7 +142,7 @@ global class LittleBitsService {
 	}
 
 	/**
-	 * Main entry point for LittleBits triggers (currently only updates handled)
+	 * Main entry point for LittleBits triggers (currently only updates handled) (requires LittleBitsTrigger__c setup)
 	 **/
 	global static void triggerHandler() {
 		if(Trigger.isUpdate && Trigger.isAfter)
@@ -129,9 +153,12 @@ global class LittleBitsService {
 	 * Temporary while i get Queueable working
 	 **/
 	@future(callout=true)
-	public static void send(String accessToken, String deviceId, Integer percent, Integer durationMs) {
-		LittleBits lb = new LittleBits(accessToken);
-		LittleBIts.Device device = lb.getDevice(deviceId);
-		device.output(percent, durationMs);		
+	private static void sendFuture(String accessToken, String deviceId, Integer percent, Integer durationMs) {
+		DeviceOutput deviceOutput = new DeviceOutput();
+		deviceOutput.AccessToken = accessToken;
+		deviceOutput.DeviceId = deviceId;
+		deviceOutput.Percent = percent;
+		deviceOutput.DurationMs = durationMs;
+		send(new List<DeviceOutput> { deviceOutput });
 	}	
 }
