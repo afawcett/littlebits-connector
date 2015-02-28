@@ -3,6 +3,7 @@ littlebits-connector
 
 Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without code! Based on the **Apex LittleBits API** [here](https://github.com/afawcett/apex-littlebitsapi). Currently outputs to LittleBits devices when records in standard or custom objects are updated. Upcoming features to subscribe to LittleBits device output and run headless Flows!
 
+- [LittleBits Connector and Process Builder](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/)
 - [LittleBits Project Opportunity Probabilty Indicator](http://littlebits.cc/projects/salesforce-littlebits-connector-opportunity-probability-indicator)
 - [Introducing Salesforce LittleBits Connector Blog](http://andyinthecloud.com/2015/01/02/introducing-the-littlebits-connector-for-salesforce/)
 - [Video Demo of Salesforce LittleBits Connector](https://www.youtube.com/watch?v=wFlkhZk6Yo8&feature=youtu.be)
@@ -11,6 +12,15 @@ Package Install
 ===============
 
 You can install this connector as managed "AppExchange" package more easily.
+
+Version 1.1 - Beta
+------------------
+
+**IMPORTANT NOTE:** This is a Beta status package, it still needs more work to work to make it more robust, work within platform limits and utilise new features of the platform at this time i don't have available to me. So for now please feel free to use in your demo orgs or sandboxes, have fun and give some feedback!
+
+![LittleBitsProcessBuilder](https://raw.githubusercontent.com/afawcett/littlebits-connector/master/images/LittleBitsProcessBuilder.png)
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004tdG), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004tdG)
 
 Version 1.0 - Beta
 ------------------
