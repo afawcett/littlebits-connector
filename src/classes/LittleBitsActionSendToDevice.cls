@@ -30,13 +30,13 @@
 global with sharing class LittleBitsActionSendToDevice {
 
 	global class SendParameters {
-		@InvocableVariable
+		@InvocableVariable(Label='Access Token' Description='Optional, if set via Custom Setting' Required=False)
 		global String AccessToken;
-		@InvocableVariable
+		@InvocableVariable(Label='Device Id' Description='Optional, if set via Custom Setting' Required=False)
         global String DeviceId;
-		@InvocableVariable
+		@InvocableVariable(Label='Percent' Description='Percent of voltage sent to device' Required=True)
         global Decimal Percent;
-		@InvocableVariable
+		@InvocableVariable(Label='DurationMs' Description='Duration of voltage sent to device' Required=True)
         global Integer DurationMs;
 	}
 	
