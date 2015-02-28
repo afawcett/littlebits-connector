@@ -36,7 +36,7 @@ global with sharing class LittleBitsActionSendToDevice {
         global String DeviceId;
 		@InvocableVariable(Label='Percent' Description='Percent of voltage sent to device' Required=True)
         global Decimal Percent;
-		@InvocableVariable(Label='DurationMs' Description='Duration of voltage sent to device' Required=True)
+		@InvocableVariable(Label='Duration in Milliseconds' Description='Duration of voltage sent to device' Required=True)
         global Integer DurationMs;
 	}
 	
