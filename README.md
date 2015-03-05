@@ -20,7 +20,7 @@ Version 1.2 - Beta
 
 - Fixed issue [Remove workaround to Percent field mapping when using Process Builder](https://github.com/afawcett/littlebits-connector/issues/6)
 
-Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004thT), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004thT)
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUq), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUq)
 
 
 Version 1.1 - Beta
