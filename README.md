@@ -13,6 +13,16 @@ Package Install
 
 You can install this connector as managed "AppExchange" package more easily.
 
+Version 1.2 - Beta
+------------------
+
+**IMPORTANT NOTE:** This is a Beta status package, it still needs more work to work to make it more robust, work within platform limits and utilise new features of the platform at this time i don't have available to me. So for now please feel free to use in your demo orgs or sandboxes, have fun and give some feedback!
+
+- Fixed issue [Remove workaround to Percent field mapping when using Process Builder](https://github.com/afawcett/littlebits-connector/issues/6)
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004thT), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004thT)
+
+
 Version 1.1 - Beta
 ------------------
 
