@@ -73,8 +73,7 @@ global with sharing class LittleBitsActionSendToDevice {
 			LittleBitsService.DeviceOutput deviceOutput = new LittleBitsService.DeviceOutput();
 			deviceOutput.AccessToken = sendParms.accessToken;
 			deviceOutput.DeviceId = sendParms.deviceId;
-			// TODO : Research this, for Percent fields, Process Builder passes 70% as 0.0007?
-			deviceOutput.Percent = Integer.valueOf(sendParms.percent*10000);
+			deviceOutput.Percent = Integer.valueOf(sendParms.percent);
 			deviceOutput.DurationMs = sendParms.durationMs;
 			deviceOuptuts.add(deviceOutput);
 		}		
