@@ -13,6 +13,13 @@ Package Install
 
 You can install this connector as managed "AppExchange" package more easily.
 
+Version 1.3 - Beta
+------------------
+
+- Fixed issue [Exception when creating the trigger](https://github.com/afawcett/littlebits-connector/issues/7)
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUv), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUv)
+
 Version 1.2 - Beta
 ------------------
 
