@@ -16,6 +16,8 @@ You can install this connector as managed "AppExchange" package more easily.
 Version 1.3 - Beta
 ------------------
 
+**IMPORTANT NOTE:** This is a Beta status package, it still needs more work to work to make it more robust, work within platform limits and utilise new features of the platform at this time i don't have available to me. So for now please feel free to use in your demo orgs or sandboxes, have fun and give some feedback!
+
 - Fixed issue [Exception when creating the trigger](https://github.com/afawcett/littlebits-connector/issues/7)
 
 Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUv), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004uUv)
