@@ -149,6 +149,93 @@ global class LittleBitsService {
 			triggerHandler(Trigger.oldMap, Trigger.newMap);
 	}
 
+	/** 
+	 * Response from the runReportTriggers method
+	 **/
+	global class ReportTriggersResult {
+		global Integer Percent {get; private set;}
+		global Integer DurationMs {get; private set;}		
+	}
+
+	/**
+	 * Processes the given LittleBits Report Trigger records, runs the reports outputs to the devices
+	 *    Based on the great work by Cory Cowgil: http://corycowgill.blogspot.co.uk/2014/12/create-real-life-dashboard-with.html
+	 **/
+	global static List<ReportTriggersResult> runReportTriggers(Set<Id> reportTriggerIds) {
+
+		// Query Report Triggers and determine Reports to Run
+		List<LittleBitsReportTrigger__c> reportTriggers = 
+			new LittleBitsReportTriggersSelector().selectById(reportTriggerIds);
+		Set<String> reportNames = new Set<String>();
+		for(LittleBitsReportTrigger__c reportTrigger : reportTriggers) {
+			reportNames.add(reportTrigger.ReportDeveloperName__c);
+		}
+
+ 		// Query Platform Reports 		
+        List <Report> reportList = 
+        	new ReportsSelector().selectByDeveloperName(reportNames);
+        Map<String, Report> reportsByName = 
+        	new Map<String, Report>();
+        for(Report report : reportList) {
+        	reportsByName.put(report.DeveloperName, report);
+        }
+
+        // TODO: Group report triggers on the same report to run the report once
+
+        // Run Reports and output to the Devices
+        List<ReportTriggersResult> runReportTriggersResults = new List<ReportTriggersResult>();
+        for(LittleBitsReportTrigger__c reportTrigger : reportTriggers) {
+        	// Report associated with this Trigger
+        	Report report = reportsByName.get(reportTrigger.ReportDeveloperName__c);
+	        String reportId = report.Id;	        
+	        // Run the report
+	        Reports.ReportResults results = Reports.ReportManager.runReport(reportId, true);	        
+	        // Parse results of the report to obtain the percent and duration from the given co-ordinates
+	        Reports.Dimension dim = results.getGroupingsDown();
+	        Reports.GroupingValue groupingVal = dim.getGroupings()[Integer.valueOf(reportTrigger.GroupingIndex__c)];	        
+	        Reports.ReportFactWithDetails factDetails =
+	            (Reports.ReportFactWithDetails)results.getFactMap().get(groupingVal.getKey() + '!T');	        
+	        Reports.SummaryValue sumValForDuration = 
+	        	reportTrigger.AggregateIndexForDuration__c!=null ? 
+	        		factDetails.getAggregates()[Integer.valueOf(reportTrigger.AggregateIndexForDuration__c)] : null;
+	        Reports.SummaryValue sumValForPercent = 
+	        	reportTrigger.AggregateIndexForPercent__c!=null ? 
+	        		factDetails.getAggregates()[Integer.valueOf(reportTrigger.AggregateIndexForPercent__c)] : null;
+	        // Send to Device
+			DeviceOutput deviceOutput = new DeviceOutput();
+			deviceOutput.AccessToken = reportTrigger.AccessToken__c;
+			deviceOutput.DeviceId = reportTrigger.DeviceId__c;			
+			deviceOutput.Percent = sumValForPercent !=null ? Integer.valueOf(sumValForPercent.getValue()) : 0;
+			deviceOutput.DurationMs = sumValForDuration !=null ? Integer.valueOf(sumValForDuration.getValue()) : -1;
+			send(new List<DeviceOutput> { deviceOutput });	        
+			// Pass back to caller
+			ReportTriggersResult result = new ReportTriggersResult();
+			result.Percent = deviceOutput.Percent;
+			result.DurationMs = deviceOutput.DurationMs;
+			runReportTriggersResults.add(result);
+        }
+
+        return runReportTriggersResults;
+	}
+
+	/**
+	 * Enque the job to process all the active Report Triggers
+	 **/
+	global static Id runReportTriggersJob() {
+		// Scope size driven by max HTTP callouts per execution scope
+		return Database.executeBatch(
+			new LittleBitsReportTriggerJob(), 
+			Limits.getLimitCallouts());
+	}
+
+	/**
+	 * Schedules the job to process all the active Report Triggers (default for now, once every hour)
+	 **/
+	global static Id scheduleRunReportTriggers() {
+		return System.schedule('LittleBits Connector Report Triggers', 
+			'0 0 * * * ?', new LittleBitsReportTriggerScheduler());
+	}
+
 	/**
 	 * Temporary while i get Queueable working
 	 **/

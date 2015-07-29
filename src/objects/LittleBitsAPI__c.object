@@ -5,6 +5,7 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>AccessToken__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Access Token</label>
         <length>255</length>
@@ -15,6 +16,7 @@
     </fields>
     <fields>
         <fullName>DeviceID__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Device ID</label>
         <length>255</length>

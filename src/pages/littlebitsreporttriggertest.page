@@ -1,0 +1,9 @@
+<apex:page standardController="LittleBitsReportTrigger__c" extensions="LittleBitsReportTriggerController" showHeader="true" sidebar="true">
+	<apex:sectionHeader title="LittleBits Report Trigger" subtitle="{!LittleBitsReportTrigger__c.Name}"/>
+	<apex:pageMessages />
+	<apex:pageMessage summary="Click the Test button to run the Report and output to the Device" severity="Info" strength="2"/>
+	<apex:form >
+		<apex:commandButton value="Test" action="{!testReportTrigger}"/>
+		<apex:commandButton value="Cancel" action="{!cancel}"/>
+	</apex:form>
+</apex:page>

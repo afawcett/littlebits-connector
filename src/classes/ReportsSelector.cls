@@ -1,5 +1,5 @@
 /**
- * Copyright (c), Andrew Fawcett, inc
+ * Copyright (c), Andrew Fawcett
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *      this list of conditions and the following disclaimer in the documentation 
  *      and/or other materials provided with the distribution.
- * - Neither the name of the Andrew Fawcett, inc nor the names of its contributors 
+ * - Neither the name of the Andrew Fawcett nor the names of its contributors 
  *      may be used to endorse or promote products derived from this software without 
  *      specific prior written permission.
  *
@@ -24,17 +24,36 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-public class Application {
+/**
+ * Class encapsulates query logic for Report
+ *
+ * https://developer.salesforce.com/page/Apex_Enterprise_Patterns_-_Selector_Layer
+ **/
+public class ReportsSelector extends fflib_SObjectSelector
+{
+	public List<Schema.SObjectField> getSObjectFieldList()
+	{
+		return new List<Schema.SObjectField> {
+				Report.Id,
+				Report.DeveloperName
+			};
+	}
 
-	/**
-	 * Selector factory
-	 **/
-	public static final fflib_Application.SelectorFactory Selector =
-	 	new fflib_Application.SelectorFactory(
-	 			new Map<SObjectType, Type> {
-	 				LittleBitsTrigger__c.SObjectType => LittleBitsTriggerSelector.class,
-	 				LittleBitsReportTrigger__c.SObjectType => LittleBitsReportTriggersSelector.class,
-	 				Report.SObjectType => ReportsSelector.class
-	 			}
-	 		);
+	public Schema.SObjectType getSObjectType()
+	{
+		return Report.sObjectType;
+	}
+
+	public List<Report> selectById(Set<ID> idSet)
+	{
+		return (List<Report>) selectSObjectsById(idSet);
+	}	
+
+	public List<Report> selectByDeveloperName(Set<String> developerNames)
+	{
+		return Database.query(
+			newQueryFactory().
+			setCondition('DeveloperName in :developerNames').
+			toSOQL());
+	}	
 }

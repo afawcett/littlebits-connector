@@ -23,6 +23,7 @@
 	<types>
 		<members>LittleBitsAPI__c</members>
 		<members>LittleBitsTrigger__c</members>
+		<members>LittleBitsReportTrigger__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -33,12 +34,13 @@
 		<members>*</members>
 		<name>CustomTab</name>
 	</types>
- 	<types>
-        <members>*</members>
-        <name>CustomLabels</name>
-    </types>	
+	<types>
+		<members>*</members>
+		<name>CustomLabels</name>
+	</types>
 	<types>
 		<members>LittleBitsTrigger__c-LittleBits Trigger Layout</members>
+		<members>LittleBitsReportTrigger__c-LittleBits Report Trigger Layout</members>
 		<name>Layout</name>
 	</types>
 	<types>

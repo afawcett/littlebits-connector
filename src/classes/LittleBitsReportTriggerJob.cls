@@ -24,17 +24,17 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-public class Application {
+public with sharing class LittleBitsReportTriggerJob implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
-	/**
-	 * Selector factory
-	 **/
-	public static final fflib_Application.SelectorFactory Selector =
-	 	new fflib_Application.SelectorFactory(
-	 			new Map<SObjectType, Type> {
-	 				LittleBitsTrigger__c.SObjectType => LittleBitsTriggerSelector.class,
-	 				LittleBitsReportTrigger__c.SObjectType => LittleBitsReportTriggersSelector.class,
-	 				Report.SObjectType => ReportsSelector.class
-	 			}
-	 		);
+	public Database.QueryLocator start(Database.BatchableContext context) {
+		return new LittleBitsReportTriggersSelector().getAllActiveAsQueryLocator();
+	}
+
+	public void execute(Database.BatchableContext context, List<LittleBitsReportTrigger__c> scope) {
+		// TODO: Improve error handling to route to some kind of log associated with the report trigger definition
+		// Delegate to the service
+		LittleBitsService.runReportTriggers(new Map<Id, SObject>(scope).keySet());
+	}
+
+	public void finish(Database.BatchableContext context) { }
 }

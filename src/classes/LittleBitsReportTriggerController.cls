@@ -1,5 +1,5 @@
 /**
- * Copyright (c), Andrew Fawcett, inc
+ * Copyright (c), Andrew Fawcett
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *      this list of conditions and the following disclaimer in the documentation 
  *      and/or other materials provided with the distribution.
- * - Neither the name of the Andrew Fawcett, inc nor the names of its contributors 
+ * - Neither the name of the Andrew Fawcett nor the names of its contributors 
  *      may be used to endorse or promote products derived from this software without 
  *      specific prior written permission.
  *
@@ -24,17 +24,31 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-public class Application {
+public with sharing class LittleBitsReportTriggerController {
 
-	/**
-	 * Selector factory
-	 **/
-	public static final fflib_Application.SelectorFactory Selector =
-	 	new fflib_Application.SelectorFactory(
-	 			new Map<SObjectType, Type> {
-	 				LittleBitsTrigger__c.SObjectType => LittleBitsTriggerSelector.class,
-	 				LittleBitsReportTrigger__c.SObjectType => LittleBitsReportTriggersSelector.class,
-	 				Report.SObjectType => ReportsSelector.class
-	 			}
-	 		);
+	private ApexPages.StandardController standardController;
+
+	public LittleBitsReportTriggerController(ApexPages.StandardController standardController) {
+		this.standardController = standardController;
+	}
+
+	public PageReference testReportTrigger()
+	{
+		try {
+			// Run report and output to Device
+			List<LittleBitsService.ReportTriggersResult> results = 
+				LittleBitsService.runReportTriggers(new Set<Id> { standardController.getId() });
+			// Confirm output sent to device
+			ApexPages.addMessage(
+				new ApexPages.Message(ApexPages.Severity.Info, 
+					String.format(
+						'Report run complete, resulting in a percentage of {0}% sent for a duration of {1}ms to the device.',
+						new List<String> { 
+								String.valueOf(results[0].Percent), 
+								String.valueOf(results[0].DurationMs) } )));
+		} catch (Exception e) {
+			ApexPages.addMessages(e);
+		}
+		return null;
+	}
 }

@@ -24,17 +24,17 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-public class Application {
+public with sharing class LittleBitsReportScheduleController {
 
-	/**
-	 * Selector factory
-	 **/
-	public static final fflib_Application.SelectorFactory Selector =
-	 	new fflib_Application.SelectorFactory(
-	 			new Map<SObjectType, Type> {
-	 				LittleBitsTrigger__c.SObjectType => LittleBitsTriggerSelector.class,
-	 				LittleBitsReportTrigger__c.SObjectType => LittleBitsReportTriggersSelector.class,
-	 				Report.SObjectType => ReportsSelector.class
-	 			}
-	 		);
+	public LittleBitsReportScheduleController(ApexPages.StandardSetController standardSetController) { }
+
+	public PageReference scheduleJob() {
+		try {
+			LittleBitsService.scheduleRunReportTriggers();			
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Job successfully scheduled.'));
+		} catch (Exception e) {
+			ApexPages.addMessages(e);
+		}
+		return null;
+	}
 }

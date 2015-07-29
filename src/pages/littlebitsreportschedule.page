@@ -1,0 +1,9 @@
+<apex:page standardController="LittleBitsReportTrigger__c" extensions="LittleBitsReportScheduleController" showHeader="true" sidebar="true" recordSetVar="records">
+	<apex:sectionHeader title="LittleBits Report Trigger" subtitle="Use this page to schedule execution of report triggers"/>
+	<apex:pageMessage summary="Press the Schedule Job button to schedule a job to run hourly to run reports and output to your devices." strength="2" severity="Info"/>
+	<apex:pageMessages/>
+	<apex:form>
+		<apex:commandButton value="Schedule Job" action="{!scheduleJob}"/>
+		<apex:commandButton value="Cancel" action="{!cancel}"/>
+	</apex:form>
+</apex:page>
