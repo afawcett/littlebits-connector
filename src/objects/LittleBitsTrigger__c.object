@@ -46,6 +46,7 @@
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -55,6 +56,7 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>AccessToken__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Optional, if the LittleBits API Custom Setting is configured.</inlineHelpText>
         <label>Access Token</label>
@@ -67,6 +69,7 @@
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Active</label>
         <trackTrending>false</trackTrending>
@@ -74,6 +77,7 @@
     </fields>
     <fields>
         <fullName>DeviceID__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>Optional, if the LittleBits API Custom Setting is configured.</inlineHelpText>
         <label>Device ID</label>
@@ -85,6 +89,7 @@
     </fields>
     <fields>
         <fullName>DurationInMillisecondsField__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Duration in Milliseconds Field</label>
         <length>80</length>
@@ -95,6 +100,7 @@
     </fields>
     <fields>
         <fullName>DurationInMilliseconds__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Duration in Milliseconds</label>
         <precision>8</precision>
@@ -106,6 +112,7 @@
     </fields>
     <fields>
         <fullName>PercentField__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Percent Field</label>
         <length>80</length>
@@ -116,6 +123,7 @@
     </fields>
     <fields>
         <fullName>Percent__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Percent</label>
         <precision>3</precision>
@@ -126,6 +134,7 @@
     </fields>
     <fields>
         <fullName>RecordID__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Record ID</label>
         <length>18</length>
@@ -136,6 +145,7 @@
     </fields>
     <fields>
         <fullName>RecordLink__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <formula>HYPERLINK(RecordID__c, &apos;Record&apos;)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -147,6 +157,7 @@
     </fields>
     <fields>
         <fullName>WhenFieldsModified__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <inlineHelpText>A list of fields, separated by a comma, that will cause the trigger to fire if modified.</inlineHelpText>
         <label>When Fields Modified</label>
@@ -156,7 +167,7 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>LittleBits Trigger</label>
+    <label>LittleBits Record Trigger</label>
     <listViews>
         <fullName>All</fullName>
         <filterScope>Everything</filterScope>
@@ -166,7 +177,7 @@
         <label>LittleBits Trigger Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>LittleBits Triggers</pluralLabel>
+    <pluralLabel>LittleBits Record Triggers</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
