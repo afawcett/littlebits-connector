@@ -27,9 +27,10 @@
 /**
  * Collects device output requets and emits them (useful in a trigger context)
  **/
-public class OutputToDevicesJob implements /* Queueable,*/ Database.AllowsCallouts {
+public class OutputToDevicesJob implements Queueable, Database.AllowsCallouts {
 
-	private List<Output> outputs = new List<Output>();
+	private List<LittleBitsService.DeviceOutput> outputs = 
+		new List<LittleBitsService.DeviceOutput>();
 
 	/**
 	 * Add an output that will be sent once the job executes
@@ -39,7 +40,7 @@ public class OutputToDevicesJob implements /* Queueable,*/ Database.AllowsCallou
 			throw new OutputToDevicesJobException('percent cannot be null');
 		if(durationMs==null)
 			throw new OutputToDevicesJobException('durationMs cannot be null');
-		Output output = new Output();
+		LittleBitsService.DeviceOutput output = new LittleBitsService.DeviceOutput();
 		output.AccessToken = accessToken;
 		output.DeviceId = deviceId;
 		output.Percent = percent;
@@ -51,19 +52,7 @@ public class OutputToDevicesJob implements /* Queueable,*/ Database.AllowsCallou
 	 * Outputs the stored outputs to the devices via the LittleBits Cloud API
 	 **/
 	public void execute(QueueableContext context) {
-		for(Output output : outputs) {
-			LittleBits lb = new LittleBits(output.AccessToken);
-			LittleBIts.Device device = lb.getDevice(output.DeviceId);
-			device.output(output.Percent, output.DurationMS);
-		}
+		LittleBitsService.send(outputs);
 	}
-
-	private class Output {
-		public String AccessToken;
-		public String DeviceId;
-		public Integer Percent;
-		public Integer DurationMS;
-	}
-
 	public class OutputToDevicesJobException extends Exception {}
 }

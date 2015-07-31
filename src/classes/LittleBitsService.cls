@@ -133,10 +133,9 @@ global class LittleBitsService {
 					// Access token and Device Id can be null, if so the LittleBits Apex client API will retrieve from a custom setting
 					String accessToken = lbTrigger.AccessToken__c;
 					String deviceId = lbTrigger.DeviceID__c;
-					sendFuture(accessToken, deviceId, percent, durationMs);
-					// lbtJob.addOutput(accessToken, deviceId, percent, durationMs);
+					lbtJob.addOutput(accessToken, deviceId, percent, durationMs);
 				}
-				// System.enqueueJob((lbtJob));
+				System.enqueueJob((lbtJob));
 			}
 		}		
 	}
@@ -235,17 +234,4 @@ global class LittleBitsService {
 		return System.schedule('LittleBits Connector Report Triggers', 
 			'0 0 * * * ?', new LittleBitsReportTriggerScheduler());
 	}
-
-	/**
-	 * Temporary while i get Queueable working
-	 **/
-	@future(callout=true)
-	private static void sendFuture(String accessToken, String deviceId, Integer percent, Integer durationMs) {
-		DeviceOutput deviceOutput = new DeviceOutput();
-		deviceOutput.AccessToken = accessToken;
-		deviceOutput.DeviceId = deviceId;
-		deviceOutput.Percent = percent;
-		deviceOutput.DurationMs = durationMs;
-		send(new List<DeviceOutput> { deviceOutput });
-	}	
 }

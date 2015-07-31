@@ -45,38 +45,10 @@ global with sharing class LittleBitsActionSendToDevice {
      **/
     @InvocableMethod(Label='Send to LittleBits Device' Description='Sends the given percentage for the given duration to a LittleBits Cloud Device.')
     global static void send(List<SendParameters> sendParameters) {
-    	System.enqueueJob(new SendAsync(sendParameters));
-	}	
-
-	/**
-	 * LittleBits API leverages HTTP callouts as such is required to be called Async
-	 **/
-	private class SendAsync implements Queueable, Database.AllowsCallouts {
-		private List<SendParameters> sendParameters;
-
-		public SendAsync(List<SendParameters> sendParameters) {
-			this.sendParameters = sendParameters;
-		}
-
-		public void execute(QueueableContext context) {
-			callService(sendParameters);
-		}
-	}
-
-	/**
-	 * Calls the service direct
-	 **/
-	private static void callService(List<SendParameters> sendParameters) {
-    	List<LittleBitsService.DeviceOutput> deviceOuptuts = new List<LittleBitsService.DeviceOutput>();
+    	// TODO: Maximum HTTP callouts is 100 currently, this code may need to split requests over several jobs
+    	OutputToDevicesJob lbtJob = new OutputToDevicesJob();
     	for(SendParameters sendParms : sendParameters)
-    	{
-			LittleBitsService.DeviceOutput deviceOutput = new LittleBitsService.DeviceOutput();
-			deviceOutput.AccessToken = sendParms.accessToken;
-			deviceOutput.DeviceId = sendParms.deviceId;
-			deviceOutput.Percent = Integer.valueOf(sendParms.percent);
-			deviceOutput.DurationMs = sendParms.durationMs;
-			deviceOuptuts.add(deviceOutput);
-		}		
-    	LittleBitsService.send(deviceOuptuts);
-	}
+	    	lbtJob.addOutput(sendParms.AccessToken, sendParms.DeviceId, Integer.valueOf(sendParms.Percent), sendParms.DurationMs);
+    	System.enqueueJob(lbtJob);
+	}	
 }
