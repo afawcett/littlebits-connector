@@ -36,6 +36,14 @@ global class LittleBitsService {
         global Integer DurationMs {get;set;}
 	}
 
+	/** 
+	 * Response from the runReportTriggers method
+	 **/
+	global class ReportTriggersResult {
+		global Integer Percent {get; private set;}
+		global Integer DurationMs {get; private set;}		
+	}
+
 	/**
 	 * Check this service can connect to the Metadata API when needed
 	 **/
@@ -152,14 +160,6 @@ global class LittleBitsService {
 			triggerHandler(Trigger.oldMap, Trigger.newMap);
 	}
 
-	/** 
-	 * Response from the runReportTriggers method
-	 **/
-	global class ReportTriggersResult {
-		global Integer Percent {get; private set;}
-		global Integer DurationMs {get; private set;}		
-	}
-
 	/**
 	 * Processes the given LittleBits Report Trigger records, runs the reports outputs to the devices
 	 *    Based on the great work by Cory Cowgil: http://corycowgill.blogspot.co.uk/2014/12/create-real-life-dashboard-with.html
@@ -188,8 +188,10 @@ global class LittleBitsService {
         // Run Reports and output to the Devices
         List<ReportTriggersResult> runReportTriggersResults = new List<ReportTriggersResult>();
         for(LittleBitsReportTrigger__c reportTrigger : reportTriggers) {
-        	// Report associated with this Trigger
+        	// Report associated with this Trigger?
         	Report report = reportsByName.get(reportTrigger.ReportDeveloperName__c);
+        	if(report==null)
+        		throw new LittleBitsServiceException('Report ' + reportTrigger.ReportDeveloperName__c + ' was not found.');
 	        String reportId = report.Id;	        
 	        // Run the report
 	        Reports.ReportResults results = Reports.ReportManager.runReport(reportId, true);	        
@@ -238,4 +240,6 @@ global class LittleBitsService {
 		return System.schedule('LittleBits Connector Report Triggers', 
 			'0 0 * * * ?', new LittleBitsReportTriggerScheduler());
 	}
+
+	public class LittleBitsServiceException extends Exception {}
 }

@@ -150,6 +150,30 @@ private class LittleBitsServiceTest {
 		System.assertEquals(true, mocksLittleBitsCloudAPI.calloutMade);
 	}
 
+	@IsTest(SeeAllData=true)
+	private static void callRunReportTriggersEnsureAExceptionOccurs() {
+
+		// Given
+		LittleBitsReportTrigger__c reportTrigger = new LittleBitsReportTrigger__c();
+		reportTrigger.Name = 'Test';
+		reportTrigger.ReportDeveloperName__c = 'Bad';
+		reportTrigger.Active__c = true;
+		reportTrigger.DeviceID__c = 'deviceId';
+		reportTrigger.AccessToken__c = 'accessToken';
+		reportTrigger.GroupingIndex__c = 0;
+		reportTrigger.AggregateIndexForPercent__c = 1;
+		reportTrigger.AggregateIndexForDuration__c = null;
+		insert reportTrigger;
+
+		// When ... Then
+		try {
+			LittleBitsService.runReportTriggers(new Set<Id> { reportTrigger.Id });
+			System.assert(false, 'Expected exception');
+		} catch (Exception e) {
+			System.assertEquals('Report Bad was not found.', e.getMessage());
+		}
+	}
+
 	private class MockLittleBitsOutputCloudAPI implements HttpCalloutMock {
 		public Boolean calloutMade = false;
 		public HTTPResponse respond(HTTPRequest req) {
