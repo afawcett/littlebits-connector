@@ -47,6 +47,11 @@
 		<members>LittleBitsAPI</members>
 		<name>RemoteSiteSetting</name>
 	</types>
+    <types>
+        <members>unfiled$public</members>
+        <members>unfiled$public/ClosedWonOpportunities</members>
+        <name>Report</name>
+    </types>    
 	<types>
 		<members>*</members>
 		<name>StaticResource</name>

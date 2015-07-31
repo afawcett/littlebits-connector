@@ -135,7 +135,11 @@ global class LittleBitsService {
 					String deviceId = lbTrigger.DeviceID__c;
 					lbtJob.addOutput(accessToken, deviceId, percent, durationMs);
 				}
-				System.enqueueJob((lbtJob));
+				// http://salesforce.stackexchange.com/questions/66947/callout-loop-not-allowed-in-unit-test-for-queueable-that-implements-httpcallou
+				if(Test.isRunningTest())
+					lbtJob.execute(null);
+				else
+					System.enqueueJob((lbtJob));
 			}
 		}		
 	}
