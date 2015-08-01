@@ -3,4 +3,5 @@
     <defaultLandingTab>LittleBitsTrigger__c</defaultLandingTab>
     <label>LittleBits Connect</label>
     <tab>LittleBitsTrigger__c</tab>
+    <tab>LittleBitsReportTrigger__c</tab>
 </CustomApplication>
