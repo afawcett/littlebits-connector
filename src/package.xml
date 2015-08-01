@@ -48,7 +48,6 @@
 		<name>RemoteSiteSetting</name>
 	</types>
     <types>
-        <members>unfiled$public</members>
         <members>unfiled$public/ClosedWonOpportunities</members>
         <name>Report</name>
     </types>    
