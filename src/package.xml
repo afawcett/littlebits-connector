@@ -24,6 +24,7 @@
 		<members>LittleBitsAPI__c</members>
 		<members>LittleBitsTrigger__c</members>
 		<members>LittleBitsReportTrigger__c</members>
+		<members>LittleBitsDeviceSubscription__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>

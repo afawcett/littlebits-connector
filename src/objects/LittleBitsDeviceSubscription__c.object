@@ -54,121 +54,102 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>AccessToken__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Optional, if the LittleBits API Custom Setting is configured.</inlineHelpText>
-        <label>Access Token</label>
-        <length>128</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Active__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>Active Report Triggers will be processed by the scheduled job.</inlineHelpText>
         <label>Active</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>AggregateIndexForDuration__c</fullName>
-        <description>Index of the field in the group providing the duration of the voltage to send to the device in milliseconds.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Optional, if not provided will leaves the voltage at the given percent permanently</inlineHelpText>
-        <label>Aggregate Index for Duration</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>AggregateIndexForPercent__c</fullName>
-        <description>Index of the field in the group providing the percentage of the voltage to send to the device.</description>
-        <externalId>false</externalId>
-        <label>Aggregate Index for Percent</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>DeviceID__c</fullName>
+        <caseSensitive>false</caseSensitive>
         <externalId>false</externalId>
-        <inlineHelpText>Optional, if the LittleBits API Custom Setting is configured.</inlineHelpText>
         <label>Device ID</label>
         <length>128</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Event__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Manage the subscriptions with the device by clicking the Manage button.</inlineHelpText>
+        <label>Event</label>
+        <picklist>
+            <picklistValues>
+                <fullName>amplitude</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:delta:sustain</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:delta:ignite</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:delta:release</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:delta:nap</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:level:active</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>amplitude:level:idle</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>8</visibleLines>
+    </fields>
+    <fields>
+        <fullName>FlowName__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Name of the Automation Flow to call when the Device events fire. Declare zero or more of the following input variables in the Flow. lbc_subscriptionRecordId, lbc_type, lbc_timestamp, lbc_user_id, lbc_bit_id, lbc_payload_percent or lbc_payload_delta</inlineHelpText>
+        <label>Flow Name</label>
+        <length>32</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>
-        <fullName>GroupingIndex__c</fullName>
-        <externalId>false</externalId>
-        <label>Grouping Index</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>ReportDeveloperName__c</fullName>
-        <externalId>false</externalId>
-        <label>Report Developer Name</label>
-        <length>80</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <label>LittleBits Report Trigger</label>
+    <label>LittleBits Device Subscription</label>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>Active__c</columns>
-        <columns>ReportDeveloperName__c</columns>
+        <columns>DeviceID__c</columns>
+        <columns>Event__c</columns>
+        <columns>FlowName__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <nameField>
-        <label>LittleBits Report Trigger Name</label>
+        <label>LittleBits Subscriptions Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>LittleBits Report Triggers</pluralLabel>
-    <searchLayouts>
-        <listViewButtons>Schedule</listViewButtons>
-    </searchLayouts>
+    <pluralLabel>LittleBits Device Subscriptions</pluralLabel>
+    <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>Schedule</fullName>
-        <availability>online</availability>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Schedule</masterLabel>
-        <openType>noSidebar</openType>
-        <page>littlebitsreportschedule</page>
-        <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>Test</fullName>
+        <fullName>Manage</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Test</masterLabel>
-        <openType>sidebar</openType>
-        <page>littlebitsreporttriggertest</page>
+        <masterLabel>Manage</masterLabel>
+        <openType>noSidebar</openType>
+        <page>managesubscription</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>
