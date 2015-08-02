@@ -24,21 +24,21 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-/** 
- * Generic handler for LittleBits subscribed events
- **/
-@RestResource(urlMapping='/subscriber')
-global with sharing class LittleBitsSubscriberResource 
-{
-	@HttpGet
-	global static String test() {
-		return 'LittleBits Subscriber Resource Ready!';
-	}
-
-	@HttpPost
-    global static void processSubscriptionEvent() {
-    	LittleBitsService.processSubscriptionEvent(
-    		(Map<String, Object>) JSON.deserializeUntyped(
-    			RestContext.request.requestBody.toString()));
-    }
+/**
+ * Interface implemented by known system managed unmanaged class in the subscriber org
+ *   which works around this missing feature in the platform... please up vote!
+ *   https://success.salesforce.com/ideaView?id=08730000000DfUCAA0
+ *
+ *   public class LittleBitsFlowFactory implements lbc.ILittleBitsFlowFactory { 
+ *      public Flow.Interview newInstance(String flowName, Map<String, Object> params) {
+ *          if(flowName == 'MyFlow')
+ *              return new Flow.Interview.MyFlow(params);
+ *          else if(flowName == 'AnotherFlow')
+ *              return new Flow.Interview.AnotherFlow(params);
+ *          return null;
+ *      }
+ *   }
+ */
+global interface ILittleBitsFlowFactory {
+	Flow.Interview newInstance(String flowName, Map<String, Object> params);
 }

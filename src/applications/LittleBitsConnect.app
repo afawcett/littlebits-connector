@@ -4,4 +4,5 @@
     <label>LittleBits Connect</label>
     <tab>LittleBitsTrigger__c</tab>
     <tab>LittleBitsReportTrigger__c</tab>
+    <tab>LittleBitsDeviceSubscription__c</tab>
 </CustomApplication>

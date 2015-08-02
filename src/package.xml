@@ -41,6 +41,7 @@
 	<types>
 		<members>LittleBitsTrigger__c-LittleBits Trigger Layout</members>
 		<members>LittleBitsReportTrigger__c-LittleBits Report Trigger Layout</members>
+		<members>LittleBitsDeviceSubscription__c-LittleBits Device Subscription Layout</members>
 		<name>Layout</name>
 	</types>
 	<types>
@@ -51,10 +52,10 @@
 		<members>*</members>
 		<name>PermissionSet</name>
 	</types>
-    <types>
-        <members>unfiled$public/ClosedWonOpportunities</members>
-        <name>Report</name>
-    </types>    
+	<types>
+		<members>unfiled$public/ClosedWonOpportunities</members>
+		<name>Report</name>
+	</types>
 	<types>
 		<members>*</members>
 		<name>StaticResource</name>

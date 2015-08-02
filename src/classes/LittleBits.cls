@@ -130,7 +130,7 @@ public class LittleBits {
 			Http h = new Http();
 			HttpRequest req = new HttpRequest(); 
           	req.setMethod('POST'); 
-          	req.setEndpoint('http://api-http.littlebitscloud.cc/subscriptions');
+          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions');
 			req.setHeader('Authorization','Bearer ' + accessToken);
 			req.setBody('publisher_id=' + Id + '&subscriber_id=' + endpoint + '&publisher_events=' + littleBitEvent);
 			HttpResponse response = h.send(req);

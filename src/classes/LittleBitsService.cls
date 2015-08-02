@@ -241,5 +241,47 @@ global class LittleBitsService {
 			'0 0 * * * ?', new LittleBitsReportTriggerScheduler());
 	}
 
+	/**
+	 * Process an event from a LittleBits device (these are not received in bulk)
+	 *   e.g. {"type":"amplitude","timestamp":1438506243653,"user_id":43303,"bit_id":"00e04c035309","payload":{"percent":100,"delta":"ignite"}}
+	 **/
+	global static void processSubscriptionEvent(Map<String, Object> littleBitPayload) {
+
+		// Unpack event data
+		// TODO: More error handling!
+		Map<String, Object> flowParams = new Map<String, Object>();
+		flowParams.put('lbc_type', littleBitPayload.get('type'));
+		flowParams.put('lbc_timestamp', littleBitPayload.get('timestamp'));
+		flowParams.put('lbc_user_id', littleBitPayload.get('user_id'));
+		flowParams.put('lbc_bit_id', littleBitPayload.get('bit_id'));
+		flowParams.put('lbc_payload_percent', ((Map<String, Object>)littleBitPayload.get('payload')).get('percent'));
+		flowParams.put('lbc_payload_delta', ((Map<String, Object>)littleBitPayload.get('payload')).get('delta'));
+
+		// Query for the associated device subscription
+		Set<String> deviceIds = new Set<String>();
+		deviceIds.add((String)littleBitPayload.get('bit_id'));
+		List<LittleBitsDeviceSubscription__c> deviceSubscriptions = 
+			new LittleBitsDeviceSubscriptionsSelector().getAllActiveByDeviceId(deviceIds);
+		if(deviceSubscriptions.size()==0)
+			// TODO: Debug / logging?
+			return;
+
+		// Pass record Id of Subscription, permits users to add custom fields to this object that can be used
+		// to help configure the behaviour in the Flow called below
+		LittleBitsDeviceSubscription__c deviceSubscription = deviceSubscriptions[0];
+		flowParams.put('lbc_subscriptionRecordId', deviceSubscription.Id);
+
+		// Process the subscription and forward to a Flow
+		// TODO: More error handling in case the factory doesn't exist
+        ILittleBitsFlowFactory flowFactory = 
+        	(ILittleBitsFlowFactory) Type.forName(null, 'LittleBitsFlowFactory').newInstance();
+        // TODO: More error handling incase the factory doesn't know the FLow name
+		Flow.Interview flow = flowFactory.newInstance(deviceSubscription.FlowName__c, flowParams);
+		flow.start();
+
+		// TODO: Think about some kind of logging mode or leave this purely to thd test mode i'm thinking about?
+		// ....
+	}
+
 	public class LittleBitsServiceException extends Exception {}
 }

@@ -1,0 +1,3 @@
+<apex:page standardController="LittleBitsDeviceSubscription__c" extensions="ManageSubscriptionController" showHeader="true" sidebar="true">
+	
+</apex:page>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c), Cory Cowgill and Andrew Fawcett
+ * Copyright (c), Andrew Fawcett, inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *      this list of conditions and the following disclaimer in the documentation 
  *      and/or other materials provided with the distribution.
- * - Neither the name of the Cory Cowgill and Andrew Fawcett, nor the names of its contributors 
+ * - Neither the name of the Andrew Fawcett, inc nor the names of its contributors 
  *      may be used to endorse or promote products derived from this software without 
  *      specific prior written permission.
  *
@@ -24,21 +24,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-/** 
- * Generic handler for LittleBits subscribed events
- **/
-@RestResource(urlMapping='/subscriber')
-global with sharing class LittleBitsSubscriberResource 
-{
-	@HttpGet
-	global static String test() {
-		return 'LittleBits Subscriber Resource Ready!';
+public with sharing class ManageSubscriptionController {
+	public ManageSubscriptionController(ApexPages.StandardController stdController) {
+		
 	}
-
-	@HttpPost
-    global static void processSubscriptionEvent() {
-    	LittleBitsService.processSubscriptionEvent(
-    		(Map<String, Object>) JSON.deserializeUntyped(
-    			RestContext.request.requestBody.toString()));
-    }
 }
