@@ -37,6 +37,7 @@ public class LittleBitsDeviceSubscriptionsSelector extends fflib_SObjectSelector
 				LittleBitsDeviceSubscription__c.Id,
 				LittleBitsDeviceSubscription__c.Active__c,
 				LittleBitsDeviceSubscription__c.DeviceID__c,
+				LittleBitsDeviceSubscription__c.AccessToken__c,
 				LittleBitsDeviceSubscription__c.Event__c,
 				LittleBitsDeviceSubscription__c.FlowName__c
 			};

@@ -151,6 +151,7 @@ private class LittleBitsServiceTest {
 	}
 
 	@IsTest(SeeAllData=true)
+	// Why SeeAllData? https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_analytics_test_reports.htm
 	private static void callRunReportTriggersEnsureAExceptionOccurs() {
 
 		// Given
@@ -174,6 +175,105 @@ private class LittleBitsServiceTest {
 		}
 	}
 
+	@IsTest
+	private static void testProcessEvents() {
+
+		// Given
+		String testEvent = '{"type":"amplitude","timestamp":1438506243653,"user_id":43303,"bit_id":"00e04c035309","payload":{"percent":100,"delta":"ignite"}}';
+		LittleBitsService.FlowFactoryClass = 'LittleBitsServiceTest.TestFlowFactory';
+		LittleBitsDeviceSubscription__c deviceSub = new LittleBitsDeviceSubscription__c();
+		deviceSub.DeviceID__c = '00e04c035309';
+		deviceSub.FlowName__c = 'TestFlow';
+		deviceSub.Active__c = true;
+		insert deviceSub;
+
+		// When
+		LittleBitsService.processSubscriptionEvent((Map<String, Object>) JSON.deserializeUntyped(testEvent));
+	}
+
+	@IsTest
+	private static void testSubscribe() {
+
+		// Given
+		Schema.DescribeSObjectResult describe = LittleBitsAPI__c.sObjectType.getDescribe();
+		String name = describe.getName();
+		String localName = describe.getLocalName();
+		String namespace = name.removeEnd(localName).removeEnd('__');				
+		String expectedAccessToken = 'testaccesstoken';
+		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/' + (namespace.length()>0 ? '/'+namespace : '') + 'subscriber&publisher_events=amplitude:delta:ignite';
+		Integer mockResponseStatusCode = 201;
+		String mockResponseBody = '';
+		Test.setMock(HttpCalloutMock.class, 
+			new MockLittleBitsSubscriptionCloudAPI(
+				expectedAccessToken, 
+				expectedBody, 
+				mockResponseStatusCode,
+				mockResponseBody));
+		LittleBitsAPI__c config = new LittleBitsAPI__c();
+		config.SubscriptionSiteURL__c = 'https://littlebitsconnectdev-developer-edition.eu5.force.com';
+		insert config;
+		LittleBitsDeviceSubscription__c deviceSub = new LittleBitsDeviceSubscription__c();
+		deviceSub.DeviceID__c = '00e04c035309';
+		deviceSub.AccessToken__c = 'testaccesstoken';		
+		deviceSub.FlowName__c = 'TestFlow';
+		deviceSub.Event__c = 'amplitude:delta:ignite';
+		deviceSub.Active__c = true;
+		insert deviceSub;
+
+		// When
+		Test.startTest();				
+		LittleBitsService.updateDeviceSubscriptions(new Set<Id> { deviceSub.Id });
+		Test.stopTest();
+	}
+
+	@IsTest
+	private static void testUnsubscribe() {
+
+		// Given
+		Schema.DescribeSObjectResult describe = LittleBitsAPI__c.sObjectType.getDescribe();
+		String name = describe.getName();
+		String localName = describe.getLocalName();
+		String namespace = name.removeEnd(localName).removeEnd('__');		
+		String expectedAccessToken = 'testaccesstoken';
+		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services'  + (namespace.length()>0 ? '/'+namespace : '') + '/apexrest/subscriber';
+		Integer mockResponseStatusCode = 200;
+		String mockResponseBody = '';
+		Test.setMock(HttpCalloutMock.class, 
+			new MockLittleBitsSubscriptionCloudAPI(
+				expectedAccessToken, 
+				expectedBody, 
+				mockResponseStatusCode,
+				mockResponseBody));
+		LittleBitsAPI__c config = new LittleBitsAPI__c();
+		config.SubscriptionSiteURL__c = 'https://littlebitsconnectdev-developer-edition.eu5.force.com';
+		insert config;
+		LittleBitsDeviceSubscription__c deviceSub = new LittleBitsDeviceSubscription__c();
+		deviceSub.DeviceID__c = '00e04c035309';
+		deviceSub.AccessToken__c = 'testaccesstoken';
+		deviceSub.FlowName__c = 'TestFlow';
+		deviceSub.Event__c = 'amplitude:delta:ignite';
+		deviceSub.Active__c = true;
+		insert deviceSub;
+
+		// When
+		Test.startTest();		
+		LittleBitsService.deleteDeviceSubscriptions(new Set<Id> { deviceSub.Id });
+		Test.stopTest();		
+	}
+
+	public class TestFlowFactory implements ILittleBitsFlowFactory {
+		public Flow.Interview newInstance(String flowName, Map<String, Object> params) {
+			System.assertEquals('TestFlow', flowName);
+			System.assertEquals('amplitude', params.get('lbc_type'));
+			System.assertEquals('1438506243653', params.get('lbc_timestamp') + '');
+			System.assertEquals('43303', params.get('lbc_user_id') + '');
+			System.assertEquals('00e04c035309', params.get('lbc_bit_id'));
+			System.assertEquals('100', params.get('lbc_payload_percent') + '');
+			System.assertEquals('ignite', params.get('lbc_payload_delta'));
+			return null;
+		}
+	}
+
 	private class MockLittleBitsOutputCloudAPI implements HttpCalloutMock {
 		public Boolean calloutMade = false;
 		public HTTPResponse respond(HTTPRequest req) {
@@ -183,4 +283,42 @@ private class LittleBitsServiceTest {
 			return res;
 		}		
 	}
+
+	/**
+	 * Mocks the LittleBits Cloud API for /devices/subscriptions HTTP POST, GET and DELETE
+	 **/
+	private class MockLittleBitsSubscriptionCloudAPI implements HttpCalloutMock {
+
+		private String expectedAccessToken;
+		private String expectedBody;
+		private Integer mockResponseStatusCode;
+		private String mockResponseBody;
+
+		public MockLittleBitsSubscriptionCloudAPI(
+			String expectedAccessToken,
+			String expectedBody,
+			Integer mockResponseStatusCode,
+			String mockResponseBody) {
+			this.expectedAccessToken = expectedAccessToken;
+			this.expectedBody = expectedBody;
+			this.mockResponseStatusCode = mockResponseStatusCode;
+			this.mockResponseBody = mockResponseBody;
+		}
+
+		public HTTPResponse respond(HTTPRequest req) {
+
+			// Assert header
+			System.assertEquals(req.getHeader('Authorization'), 'Bearer ' + expectedAccessToken);
+
+			// Assert body
+			System.assertEquals(expectedBody, req.getBody());
+			
+			// Mock response
+			HttpResponse res = new HttpResponse();
+			res.setStatusCode(mockResponseStatusCode);
+			if(mockResponseBody!=null)
+				res.setBody(mockResponseBody);
+			return res;
+		}
+	}	
 }

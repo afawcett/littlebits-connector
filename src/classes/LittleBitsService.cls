@@ -70,11 +70,8 @@ global class LittleBitsService {
 	global static void send(List<DeviceOutput> deviceOutputs) {
 		// NOTE: LittleBits Cloud API is not bulkified, maybe one day it will be!
 		for(DeviceOutput deviceOutput : deviceOutputs) {
-	        LittleBits lb = deviceOutput.AccessToken != null ? 
-	        	new LittleBits(deviceOutput.AccessToken) : new LittleBits();
-			LittleBIts.Device device = deviceOutput.DeviceId != null ? 
-				lb.getDevice(deviceOutput.DeviceId) : lb.getDevice();
-			device.output(deviceOutput.Percent, deviceOutput.DurationMs);			
+			getDevice(deviceOutput.AccessToken, deviceOutput.DeviceId).
+				output(deviceOutput.Percent, deviceOutput.DurationMs);			
 		}
 	}
 
@@ -274,14 +271,78 @@ global class LittleBitsService {
 		// Process the subscription and forward to a Flow
 		// TODO: More error handling in case the factory doesn't exist
         ILittleBitsFlowFactory flowFactory = 
-        	(ILittleBitsFlowFactory) Type.forName(null, 'LittleBitsFlowFactory').newInstance();
+        	(ILittleBitsFlowFactory) Type.forName(null, FlowFactoryClass).newInstance();
         // TODO: More error handling incase the factory doesn't know the FLow name
 		Flow.Interview flow = flowFactory.newInstance(deviceSubscription.FlowName__c, flowParams);
-		flow.start();
+		if(flow!=null)
+			flow.start();
 
 		// TODO: Think about some kind of logging mode or leave this purely to thd test mode i'm thinking about?
 		// ....
 	}
 
+	@TestVisible
+	private static String FlowFactoryClass = 'LittleBitsFlowFactory';
+
+	/**
+	 * Update device subscriptions via LittleBits Cloud API based on the given device subscriptions
+	 *   NOTE: Since this service method makes callout outs, its scalability is limited by the remaining callouts in the request scope
+	 **/
+	global static void updateDeviceSubscriptions(Set<Id> subscriptioIds) {
+
+		String callbackUrl = generateCallbackURL();
+		List<LittleBitsDeviceSubscription__c> deviceSubscriptions = 
+			new LittleBitsDeviceSubscriptionsSelector().selectById(subscriptioIds);
+		for(LittleBitsDeviceSubscription__c deviceSubscription : deviceSubscriptions) {
+			getDevice(deviceSubscription.AccessToken__c, deviceSubscription.DeviceID__c).
+				// TODO: This approach does not currently support multiple events (will document for first release)
+				subscribe(callbackUrl, deviceSubscription.Event__c);
+		}
+	}
+
+	/**
+	 * Remove device subscriptions via LittleBits Cloud API based on the given device subscriptions
+	 *   NOTE: Since this service method makes callout outs, its scalability is limited by the remaining callouts in the request scope
+	 **/
+	global static void deleteDeviceSubscriptions(Set<Id> subscriptioIds) {
+
+		String callbackUrl = generateCallbackURL();
+		List<LittleBitsDeviceSubscription__c> deviceSubscriptions = 
+			new LittleBitsDeviceSubscriptionsSelector().selectById(subscriptioIds);
+		for(LittleBitsDeviceSubscription__c deviceSubscription : deviceSubscriptions) {
+			getDevice(deviceSubscription.AccessToken__c, deviceSubscription.DeviceID__c).
+				unsubscribe(callbackUrl);
+		}
+	}
+
 	public class LittleBitsServiceException extends Exception {}
+
+	/**
+	 * Obtain an instance of the LittleBits Apex Device class (leverages Custom Setting config routes accordingly)
+	 **/
+	private static LittleBits.Device getDevice(String accessToken, String deviceId) {
+		LittleBits lb = accessToken != null ? 
+        	new LittleBits(accessToken) : new LittleBits();
+		LittleBIts.Device device = deviceId != null ? 
+			lb.getDevice(deviceId) : lb.getDevice();
+		return device;
+	}	
+
+	/**
+	 * Uses the configured Force.com site to generate the fully callback URL to pass to LittleBits API subscription resource
+	 **/
+	private static String generateCallbackURL() {
+
+		// Namespace context?
+		Schema.DescribeSObjectResult describe = LittleBitsAPI__c.sObjectType.getDescribe();
+		String name = describe.getName();
+		String localName = describe.getLocalName();
+		String namespace = name.removeEnd(localName).removeEnd('__');
+
+		// Generate URL, factoring in namespace dynamically (permits development and testing in unmanaged contexts)
+		LittleBitsAPI__c settings = LittleBitsAPI__c.getInstance(); 
+		if(settings==null || settings.SubscriptionSiteURL__c==null)
+			throw new LittleBitsServiceException('Please specify the Subscription Site URL in the LittleBits Custom Setting under Setup.');
+		return settings.SubscriptionSiteURL__c + '/services/apexrest' + (namespace.length()>0 ? '/' + namespace : '') + '/subscriber';
+	}
 }

@@ -153,6 +153,79 @@ private class LittleBitsTest {
 		}
 	}
 
+	@IsTest
+	private static void testSubscribe() {
+		// Test data
+		String expectedAccessToken = 'testaccesstoken';
+		String expectedBody = 'publisher_id=testdeviceid&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber&publisher_events=amplitude:delta:ignite';
+		Integer mockResponseStatusCode = 201;
+		String mockResponseBody = '';
+
+		// Mock web service callout to emulate no parameters passed
+		Test.setMock(HttpCalloutMock.class, 
+			new MockLittleBitsSubscriptionCloudAPI(
+				expectedAccessToken, 
+				expectedBody, 
+				mockResponseStatusCode,
+				mockResponseBody));
+
+		// Configure via constructor and method parameters
+		LittleBits lb = new LittleBits(expectedAccessToken);
+		LittleBits.Device device = lb.getDevice('testdeviceid');
+		device.subscribe('https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber', 'amplitude:delta:ignite');
+	}
+
+	@IsTest
+	private static void testGetSubscription() {
+		// Test data
+		String expectedAccessToken = 'testaccesstoken';
+		String expectedDeviceId = 'testdeviceid';
+		String expectedBody = 'publisher_id=testdeviceid&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber';
+		Integer mockResponseStatusCode = 201;
+		String mockResponseBody = '{"publisher_id":"testdeviceid","subscriber_id":"https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber","publisher_events":[{"name":"amplitude:delta:ignite"}]}';
+
+		// Mock web service callout to emulate no parameters passed
+		Test.setMock(HttpCalloutMock.class, 
+			new MockLittleBitsSubscriptionCloudAPI(
+				expectedAccessToken, 
+				expectedBody, 
+				mockResponseStatusCode,
+				mockResponseBody));
+
+		// Configure via constructor and method parameters
+		LittleBits lb = new LittleBits(expectedAccessToken);
+		LittleBits.Device device = lb.getDevice(expectedDeviceId);
+		LittleBits.Subscription subscription = device.getSubscription('https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber');
+
+		// Assert response
+		System.assertEquals('https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber', subscription.subscriber_id);
+		System.assertEquals(expectedDeviceId, subscription.publisher_id);
+		System.assertEquals(1, subscription.publisher_events.size());
+		System.assertEquals('amplitude:delta:ignite', subscription.publisher_events[0].name);
+	}
+
+	@IsTest
+	private static void testUnsubscribe() {
+		// Test data
+		String expectedAccessToken = 'testaccesstoken';
+		String expectedBody = 'publisher_id=testdeviceid&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber';
+		Integer mockResponseStatusCode = 200;
+		String mockResponseBody = '';
+
+		// Mock web service callout to emulate no parameters passed
+		Test.setMock(HttpCalloutMock.class, 
+			new MockLittleBitsSubscriptionCloudAPI(
+				expectedAccessToken, 
+				expectedBody, 
+				mockResponseStatusCode,
+				mockResponseBody));
+
+		// Configure via constructor and method parameters
+		LittleBits lb = new LittleBits(expectedAccessToken);
+		LittleBits.Device device = lb.getDevice('testdeviceid');
+		device.unsubscribe('https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber');
+	}
+
 	/**
 	 * Mocks the LittleBits Cloud API for /devices/{id}/output HTTP POST
 	 **/
@@ -196,6 +269,44 @@ private class LittleBitsTest {
 				System.assertEquals('percent='+expectedPercent+'&duration_ms='+expectedDurationMs, req.getBody());
 			else
 				System.assertEquals('', req.getBody());
+			
+			// Mock response
+			HttpResponse res = new HttpResponse();
+			res.setStatusCode(mockResponseStatusCode);
+			if(mockResponseBody!=null)
+				res.setBody(mockResponseBody);
+			return res;
+		}
+	}
+
+	/**
+	 * Mocks the LittleBits Cloud API for /devices/subscriptions HTTP POST, GET and DELETE
+	 **/
+	private class MockLittleBitsSubscriptionCloudAPI implements HttpCalloutMock {
+
+		private String expectedAccessToken;
+		private String expectedBody;
+		private Integer mockResponseStatusCode;
+		private String mockResponseBody;
+
+		public MockLittleBitsSubscriptionCloudAPI(
+			String expectedAccessToken,
+			String expectedBody,
+			Integer mockResponseStatusCode,
+			String mockResponseBody) {
+			this.expectedAccessToken = expectedAccessToken;
+			this.expectedBody = expectedBody;
+			this.mockResponseStatusCode = mockResponseStatusCode;
+			this.mockResponseBody = mockResponseBody;
+		}
+
+		public HTTPResponse respond(HTTPRequest req) {
+
+			// Assert header
+			System.assertEquals(req.getHeader('Authorization'), 'Bearer ' + expectedAccessToken);
+
+			// Assert body
+			System.assertEquals(expectedBody, req.getBody());
 			
 			// Mock response
 			HttpResponse res = new HttpResponse();

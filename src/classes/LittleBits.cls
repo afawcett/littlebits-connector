@@ -132,11 +132,59 @@ public class LittleBits {
           	req.setMethod('POST'); 
           	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions');
 			req.setHeader('Authorization','Bearer ' + accessToken);
+			req.setHeader('Accept', 'application/vnd.littlebits.v2+json');
 			req.setBody('publisher_id=' + Id + '&subscriber_id=' + endpoint + '&publisher_events=' + littleBitEvent);
 			HttpResponse response = h.send(req);
 			if(response.getStatusCode()!=201)
 				throw new LittleBitsException(response.getBody());
 		}
+
+		/** 
+		 * Delete a Subscription from a device
+		 **/
+		public void unsubscribe(String endpoint) {
+			Http h = new Http();
+			HttpRequest req = new HttpRequest(); 
+          	req.setMethod('DELETE'); 
+          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions');
+			req.setHeader('Authorization','Bearer ' + accessToken);
+			req.setHeader('Accept', 'application/vnd.littlebits.v2+json');
+			req.setBody('publisher_id=' + Id + '&subscriber_id=' + endpoint);
+			HttpResponse response = h.send(req);
+			if(response.getStatusCode()!=200)
+				throw new LittleBitsException(response.getBody());
+
+		}
+
+		/**
+		 * Retrieve Subscriptions for a device
+		 **/
+		public Subscription getSubscription(String endpoint) {
+			Http h = new Http();
+			HttpRequest req = new HttpRequest(); 
+          	req.setMethod('GET'); 
+          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions');
+			req.setHeader('Authorization','Bearer ' + accessToken);
+			req.setHeader('Accept', 'application/vnd.littlebits.v2+json');
+			req.setBody('publisher_id=' + Id + '&subscriber_id=' + endpoint);
+			HttpResponse response = h.send(req);
+			if(response.getStatusCode()!=201)
+				throw new LittleBitsException(response.getBody());
+			return (Subscription) JSON.deserialize(response.getBody(), Subscription.class);
+		}
+	}
+
+	/**
+	 * Describes the response from /subscriptions resource
+	 **/
+	public class Subscription {
+		public String publisher_id;
+		public String subscriber_id;
+		public List<PublisherEvent> publisher_events;
+
+	}
+	public class PublisherEvent {
+		public String name;
 	}
 
 	public class LittleBitsException extends Exception { }

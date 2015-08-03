@@ -25,7 +25,30 @@
 **/
 
 public with sharing class ManageSubscriptionController {
+
+	private ApexPages.StandardController stdController;
+
 	public ManageSubscriptionController(ApexPages.StandardController stdController) {
-		
+		this.stdController = stdController;
+	}
+
+	public PageReference subscribe() {
+		try {
+			LittleBitsService.updateDeviceSubscriptions(new Set<Id> { stdController.getId() });
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Device subscription updated.'));
+		} catch (Exception e) {
+			ApexPages.addMessages(e);
+		}
+		return null;
+	}
+
+	public PageReference unsubscribe() {
+		try {
+			LittleBitsService.deleteDeviceSubscriptions(new Set<Id> { stdController.getId() });
+			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Device subscription removed.'));
+		} catch (Exception e) {
+			ApexPages.addMessages(e);
+		}
+		return null;
 	}
 }

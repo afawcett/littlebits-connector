@@ -54,6 +54,17 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>AccessToken__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Optional, if the LittleBits API Custom Setting is configured.</inlineHelpText>
+        <label>Access Token</label>
+        <length>128</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Active__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
