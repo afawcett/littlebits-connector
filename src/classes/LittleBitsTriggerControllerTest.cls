@@ -104,7 +104,13 @@ private with sharing class LittleBitsTriggerControllerTest
 		// Test supported?
 		if(!TestContext.isSupported())
 			return;
-		
+
+		// Namespace		
+		Schema.DescribeSObjectResult describe = LittleBitsAPI__c.sObjectType.getDescribe();
+		String name = describe.getName();
+		String localName = describe.getLocalName();
+		String namespace = name.removeEnd(localName).removeEnd('__');		
+
     	// Metadata API web Service mock implementation for tests
         Test.setMock(WebServiceMock.class, new WebServiceMockImpl());
 
@@ -135,7 +141,7 @@ private with sharing class LittleBitsTriggerControllerTest
 				'trigger ' + controller.TriggerName + ' on ' + controller.SObjectName + '\n' + 
 				'    (before delete, before insert, before update, after delete, after insert, after undelete, after update)\n'+ 
 				'{\n'+
-				'    lbc.LittleBitsService.triggerHandler();\n'+
+				'    ' + (namespace.length()>0 ? namespace + '.' : '') + 'LittleBitsService.triggerHandler();\n'+
 				'}\n', controller.getTriggerCode());
 		System.assertEquals(
 			 	'/**\n' +
