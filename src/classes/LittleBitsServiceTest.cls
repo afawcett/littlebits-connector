@@ -200,7 +200,7 @@ private class LittleBitsServiceTest {
 		String localName = describe.getLocalName();
 		String namespace = name.removeEnd(localName).removeEnd('__');				
 		String expectedAccessToken = 'testaccesstoken';
-		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/' + (namespace.length()>0 ? '/'+namespace : '') + 'subscriber&publisher_events=amplitude:delta:ignite';
+		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest' + (namespace.length()>0 ? '/'+namespace : '') + '/subscriber&publisher_events=amplitude:delta:ignite';
 		Integer mockResponseStatusCode = 201;
 		String mockResponseBody = '';
 		Test.setMock(HttpCalloutMock.class, 
@@ -235,7 +235,7 @@ private class LittleBitsServiceTest {
 		String localName = describe.getLocalName();
 		String namespace = name.removeEnd(localName).removeEnd('__');		
 		String expectedAccessToken = 'testaccesstoken';
-		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services'  + (namespace.length()>0 ? '/'+namespace : '') + '/apexrest/subscriber';
+		String expectedBody = 'publisher_id=00e04c035309&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest' + (namespace.length()>0 ? '/'+namespace : '') + '/subscriber';
 		Integer mockResponseStatusCode = 200;
 		String mockResponseBody = '';
 		Test.setMock(HttpCalloutMock.class, 
