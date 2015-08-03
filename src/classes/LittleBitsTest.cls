@@ -180,9 +180,9 @@ private class LittleBitsTest {
 		// Test data
 		String expectedAccessToken = 'testaccesstoken';
 		String expectedDeviceId = 'testdeviceid';
-		String expectedBody = 'publisher_id=testdeviceid&subscriber_id=https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber';
-		Integer mockResponseStatusCode = 201;
-		String mockResponseBody = '{"publisher_id":"testdeviceid","subscriber_id":"https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber","publisher_events":[{"name":"amplitude:delta:ignite"}]}';
+		String expectedBody = '';
+		Integer mockResponseStatusCode = 200;
+		String mockResponseBody = '[{"publisher_id":"testdeviceid","subscriber_id":"https://littlebitsconnectdev-developer-edition.eu5.force.com/services/apexrest/subscriber","publisher_events":[{"name":"amplitude:delta:ignite"}]}]';
 
 		// Mock web service callout to emulate no parameters passed
 		Test.setMock(HttpCalloutMock.class, 

@@ -163,15 +163,34 @@ public class LittleBits {
 			Http h = new Http();
 			HttpRequest req = new HttpRequest(); 
           	req.setMethod('GET'); 
-          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions');
+          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions?publisher_id=' + Id + '&subscriber_id=' + endpoint);
 			req.setHeader('Authorization','Bearer ' + accessToken);
 			req.setHeader('Accept', 'application/vnd.littlebits.v2+json');
-			req.setBody('publisher_id=' + Id + '&subscriber_id=' + endpoint);
 			HttpResponse response = h.send(req);
-			if(response.getStatusCode()!=201)
+			if(response.getStatusCode()!=200)
 				throw new LittleBitsException(response.getBody());
-			return (Subscription) JSON.deserialize(response.getBody(), Subscription.class);
+			List<Subscription> subs = (List<Subscription>) JSON.deserialize(response.getBody(), List<Subscription>.class);
+			if(subs.size()!=1)
+				throw new LittleBitsException('No subscriptions found for this endpoint.');
+			return subs[0];
 		}
+
+		/** 
+		 * List all subscriptions for this device
+		 **/
+		public List<Subscription> getSubscriptions() {
+			Http h = new Http();
+			HttpRequest req = new HttpRequest(); 
+          	req.setMethod('GET'); 
+          	req.setEndpoint('https://api-http.littlebitscloud.cc/subscriptions?publisher_id=' + Id);
+			req.setHeader('Authorization','Bearer ' + accessToken);
+			req.setHeader('Accept', 'application/vnd.littlebits.v2+json');
+			HttpResponse response = h.send(req);
+			if(response.getStatusCode()!=200)
+				throw new LittleBitsException(response.getBody());
+			List<Subscription> subs = (List<Subscription>) JSON.deserialize(response.getBody(), List<Subscription>.class);
+			return subs;
+		}		
 	}
 
 	/**
