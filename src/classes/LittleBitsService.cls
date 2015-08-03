@@ -269,10 +269,12 @@ global class LittleBitsService {
 		flowParams.put('lbc_subscriptionRecordId', deviceSubscription.Id);
 
 		// Process the subscription and forward to a Flow
-		// TODO: More error handling in case the factory doesn't exist
-        ILittleBitsFlowFactory flowFactory = 
-        	(ILittleBitsFlowFactory) Type.forName(null, FlowFactoryClass).newInstance();
-        // TODO: More error handling incase the factory doesn't know the FLow name
+		Type typeFactory = Type.forName('', FlowFactoryClass);
+		if(typeFactory==null) {
+			System.debug(FlowFactoryClass + ' class not found.');
+			return;
+		}
+        ILittleBitsFlowFactory flowFactory = (ILittleBitsFlowFactory) typeFactory.newInstance();
 		Flow.Interview flow = flowFactory.newInstance(deviceSubscription.FlowName__c, flowParams);
 		if(flow!=null)
 			flow.start();
