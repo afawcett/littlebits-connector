@@ -6,6 +6,26 @@
     </applicationVisibilities>
     <fieldPermissions>
         <editable>true</editable>
+        <field>LittleBitsDeviceSubscription__c.AccessToken__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>LittleBitsDeviceSubscription__c.Active__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>LittleBitsDeviceSubscription__c.Event__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>LittleBitsDeviceSubscription__c.FlowName__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>LittleBitsReportTrigger__c.AccessToken__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -86,6 +106,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
+        <object>LittleBitsDeviceSubscription__c</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
         <object>LittleBitsReportTrigger__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
@@ -107,6 +136,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>managesubscription</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>managetrigger</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -114,6 +147,10 @@
         <apexPage>welcome</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
+    <tabSettings>
+        <tab>LittleBitsDeviceSubscription__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
     <tabSettings>
         <tab>LittleBitsReportTrigger__c</tab>
         <visibility>Visible</visibility>
