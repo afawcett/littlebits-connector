@@ -141,6 +141,7 @@ global class LittleBitsService {
 					lbtJob.addOutput(accessToken, deviceId, percent, durationMs);
 				}
 				// http://salesforce.stackexchange.com/questions/66947/callout-loop-not-allowed-in-unit-test-for-queueable-that-implements-httpcallou
+				// https://success.salesforce.com/issues_view?id=a1p30000000sXtbAAE
 				if(Test.isRunningTest())
 					lbtJob.execute(null);
 				else
