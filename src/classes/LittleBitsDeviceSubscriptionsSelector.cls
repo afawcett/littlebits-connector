@@ -53,6 +53,11 @@ public class LittleBitsDeviceSubscriptionsSelector extends fflib_SObjectSelector
 		return (List<LittleBitsDeviceSubscription__c>) selectSObjectsById(idSet);
 	}
 
+	public List<LittleBitsDeviceSubscription__c> getAllActive() {
+		return Database.query(
+			newQueryFactory().setCondition('Active__c = true').toSOQL());
+	}
+
 	public List<LittleBitsDeviceSubscription__c> getAllActiveByDeviceId(Set<String> deviceIds) {
 		return Database.query(
 			newQueryFactory().setCondition('Active__c = true AND DeviceId__c in :deviceIds').toSOQL());

@@ -285,7 +285,7 @@ global class LittleBitsService {
 	}
 
 	@TestVisible
-	private static String FlowFactoryClass = 'LittleBitsFlowFactory';
+	private static String FlowFactoryClass = 'lbc_LittleBitsFlowFactory';
 
 	/**
 	 * Update device subscriptions via LittleBits Cloud API based on the given device subscriptions

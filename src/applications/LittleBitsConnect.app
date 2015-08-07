@@ -5,4 +5,5 @@
     <tab>LittleBitsTrigger__c</tab>
     <tab>LittleBitsReportTrigger__c</tab>
     <tab>LittleBitsDeviceSubscription__c</tab>
+    <tab>LittleBitsManageFlowFactory</tab>
 </CustomApplication>
