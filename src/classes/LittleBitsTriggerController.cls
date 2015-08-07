@@ -188,6 +188,8 @@ public with sharing class LittleBitsTriggerController
 		// Deploy zip file posted back from the page action function				
 		MetadataService.MetadataPort service = createService();
 		MetadataService.DeployOptions deployOptions = new MetadataService.DeployOptions();
+		deployOptions.testLevel = 'RunSpecifiedTests';
+		deployOptions.runTests = new List<String> { TriggerTestName };
         deployOptions.allowMissingFiles = false;
         deployOptions.autoUpdatePackage = false;
         deployOptions.checkOnly = false;
@@ -195,8 +197,6 @@ public with sharing class LittleBitsTriggerController
         deployOptions.performRetrieve = false;
         deployOptions.purgeOnDelete = false;
         deployOptions.rollbackOnError = true;
-        deployOptions.runAllTests = false;
-        deployOptions.runTests = null;
         deployOptions.singlePackage = true;		
 		AsyncResult = service.deploy(ZipData, DeployOptions);		
 		return null;
