@@ -5,6 +5,8 @@ Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without c
 
 ![LittleBits Connector Tabs](https://raw.githubusercontent.com/afawcett/littlebits-connector/master/images/LittleBitsTabs.png)
 
+![LittleBits Connector Overview](https://andrewfawcett.files.wordpress.com/2015/08/littlebitsoverview1.png)
+
 - [Exploring IoT with LittleBits and Salesforce #DF15](http://andyinthecloud.com/2015/08/10/exploring-iot-with-littlebits-and-salesforce-df15/)
 - [LittleBits Connector and Process Builder](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/)
 - [LittleBits Project Opportunity Probabilty Indicator](http://littlebits.cc/projects/salesforce-littlebits-connector-opportunity-probability-indicator)
