@@ -1,5 +1,5 @@
 /**
- * Copyright (c), Andrew Fawcett
+ * Copyright (c), Cory Cowgill and Andrew Fawcett
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *      this list of conditions and the following disclaimer in the documentation 
  *      and/or other materials provided with the distribution.
- * - Neither the name of the Andrew Fawcett nor the names of its contributors 
+ * - Neither the name of the Cory Cowgill and Andrew Fawcett, nor the names of its contributors 
  *      may be used to endorse or promote products derived from this software without 
  *      specific prior written permission.
  *
@@ -24,44 +24,10 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-/**
- * Class encapsulates query logic for LittleBitsReportTrigger__c
- *
- * https://developer.salesforce.com/page/Apex_Enterprise_Patterns_-_Selector_Layer
- **/
-public class LittleBitsReportTriggersSelector extends fflib_SObjectSelector
-{
-	public List<Schema.SObjectField> getSObjectFieldList()
-	{
-		return new List<Schema.SObjectField> {
-				LittleBitsReportTrigger__c.Id,
-				LittleBitsReportTrigger__c.ReportDeveloperName__c,
-				LittleBitsReportTrigger__c.AccessToken__c,
-				LittleBitsReportTrigger__c.AggregateIndexForDuration__c,
-				LittleBitsReportTrigger__c.AggregateIndexForPercent__c,
-				LittleBitsReportTrigger__c.DeviceID__c,
-				LittleBitsReportTrigger__c.GroupingIndex__c,
-				LittleBitsReportTrigger__c.UniqueName__c
-			};
-	}
-
-	public Schema.SObjectType getSObjectType()
-	{
-		return LittleBitsReportTrigger__c.sObjectType;
-	}
-
-	public List<LittleBitsReportTrigger__c> selectById(Set<ID> idSet)
-	{
-		return (List<LittleBitsReportTrigger__c>) selectSObjectsById(idSet);
-	}	
-
-	public List<LittleBitsReportTrigger__c> selectByUniqueName(Set<String> uniqueNames) {
-		return Database.query(
-			newQueryFactory().setCondition('UniqueName__c in :uniqueNames').toSOQL());
-	}
-
-	public Database.QueryLocator getAllActiveAsQueryLocator() {
-		return Database.getQueryLocator(
-			newQueryFactory().setCondition('Active__c = true').toSOQL());
+global with sharing class LittleBitsSubscriberInboundEmailHandler implements Messaging.InboundEmailHandler {
+	global Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email, Messaging.InboundEnvelope envelope) {
+		Messaging.InboundEmailResult result = new Messaging.InboundEmailresult();
+		LittleBitsService.processSubscriptionEvent(email);
+		return result;
 	}
 }

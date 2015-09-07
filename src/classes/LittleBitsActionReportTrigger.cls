@@ -1,5 +1,5 @@
 /**
- * Copyright (c), Andrew Fawcett
+ * Copyright (c), Andrew Fawcett, inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -10,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *      this list of conditions and the following disclaimer in the documentation 
  *      and/or other materials provided with the distribution.
- * - Neither the name of the Andrew Fawcett nor the names of its contributors 
+ * - Neither the name of the Andrew Fawcett, inc nor the names of its contributors 
  *      may be used to endorse or promote products derived from this software without 
  *      specific prior written permission.
  *
@@ -24,44 +24,37 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-/**
- * Class encapsulates query logic for LittleBitsReportTrigger__c
- *
- * https://developer.salesforce.com/page/Apex_Enterprise_Patterns_-_Selector_Layer
- **/
-public class LittleBitsReportTriggersSelector extends fflib_SObjectSelector
-{
-	public List<Schema.SObjectField> getSObjectFieldList()
-	{
-		return new List<Schema.SObjectField> {
-				LittleBitsReportTrigger__c.Id,
-				LittleBitsReportTrigger__c.ReportDeveloperName__c,
-				LittleBitsReportTrigger__c.AccessToken__c,
-				LittleBitsReportTrigger__c.AggregateIndexForDuration__c,
-				LittleBitsReportTrigger__c.AggregateIndexForPercent__c,
-				LittleBitsReportTrigger__c.DeviceID__c,
-				LittleBitsReportTrigger__c.GroupingIndex__c,
-				LittleBitsReportTrigger__c.UniqueName__c
-			};
-	}
+global with sharing class LittleBitsActionReportTrigger {
 
-	public Schema.SObjectType getSObjectType()
-	{
-		return LittleBitsReportTrigger__c.sObjectType;
+	global class Request {
+		@InvocableVariable(Label='Unique Name' Description='Unique Name of the Report Trigger' Required=true)
+		global String UniqueName;
 	}
-
-	public List<LittleBitsReportTrigger__c> selectById(Set<ID> idSet)
-	{
-		return (List<LittleBitsReportTrigger__c>) selectSObjectsById(idSet);
+	
+    /**
+     * Run the given Report Trigger
+     **/
+    @InvocableMethod(Label='Runs the given Report Trigger' Description='Runs the given Report Trigger.')
+    global static void run(List<Request> requests) {
+    	Set<String> uniqueNames = new Set<String>();
+    	for(Request request : requests)
+    		uniqueNames.add(request.UniqueName);
+    	System.enqueueJob(new RunReportTriggerJob(uniqueNames));
 	}	
 
-	public List<LittleBitsReportTrigger__c> selectByUniqueName(Set<String> uniqueNames) {
-		return Database.query(
-			newQueryFactory().setCondition('UniqueName__c in :uniqueNames').toSOQL());
-	}
+	/**
+	 * Run the Report Triggers in Async since Invocable Methods from Process Builder don't support callouts
+	 **/
+	public class RunReportTriggerJob implements Queueable, Database.AllowsCallouts {
 
-	public Database.QueryLocator getAllActiveAsQueryLocator() {
-		return Database.getQueryLocator(
-			newQueryFactory().setCondition('Active__c = true').toSOQL());
-	}
+		private Set<String> uniqueNames =  new Set<String>();
+
+		public RunReportTriggerJob(Set<String> uniqueNames) {
+			this.uniqueNames = uniqueNames;
+		}
+
+		public void execute(QueueableContext context) {
+			LittleBitsService.runReportTriggers(uniqueNames);
+		}
+	}	
 }

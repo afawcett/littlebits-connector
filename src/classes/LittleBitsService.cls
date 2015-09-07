@@ -157,6 +157,17 @@ global class LittleBitsService {
 		if(Trigger.isUpdate && Trigger.isAfter)
 			triggerHandler(Trigger.oldMap, Trigger.newMap);
 	}
+	
+	/**
+	 * Processes the given LittleBits Report Trigger records, runs the reports outputs to the devices
+	 *    Based on the great work by Cory Cowgil: http://corycowgill.blogspot.co.uk/2014/12/create-real-life-dashboard-with.html
+	 **/
+	global static List<ReportTriggersResult> runReportTriggers(Set<String> uniqueNames) {
+		List<LittleBitsReportTrigger__c> reportTriggers = 
+			new LittleBitsReportTriggersSelector().selectByUniqueName(uniqueNames);
+		Set<Id> reportTriggerIds = new Map<Id, LittleBitsReportTrigger__c>(reportTriggers).keySet();
+		return runReportTriggers(reportTriggerIds);
+	}
 
 	/**
 	 * Processes the given LittleBits Report Trigger records, runs the reports outputs to the devices
@@ -269,20 +280,40 @@ global class LittleBitsService {
 		LittleBitsDeviceSubscription__c deviceSubscription = deviceSubscriptions[0];
 		flowParams.put('lbc_subscriptionRecordId', deviceSubscription.Id);
 
-		// Process the subscription and forward to a Flow
-		Type typeFactory = Type.forName('', FlowFactoryClass);
-		if(typeFactory==null) {
-			System.debug(FlowFactoryClass + ' class not found.');
-			return;
+		// Run as User implement via Inbound Email Handler
+		if(deviceSubscription.RunAsUser__c!=null) {
+			// Determine the Inbound Email address configured for this user
+			List<EmailServicesAddress> emailServices = 
+				new EmailServicesAddressesSelector().selectByUser(new Set<Id> { deviceSubscription.RunAsUser__c });
+			if(emailServices.size()==0)
+				throw new LittleBitsServiceException('No Inbound Email Service found for user.');
+			if(emailServices.size()>1)
+				throw new LittleBitsServiceException('Multiple Inbound Email Services found for user.');
+			// Send the email
+			String emailServiceAddress = emailServices[0].LocalPart + '@' + emailServices[0].EmailDomainName;
+			Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+			mail.setToAddresses(new String[] { emailServiceAddress });
+			mail.setSubject(deviceSubscription.FlowName__c);
+			mail.setPlainTextBody(JSON.serialize(flowParams));
+			Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
 		}
-        ILittleBitsFlowFactory flowFactory = (ILittleBitsFlowFactory) typeFactory.newInstance();
-		Flow.Interview flow = flowFactory.newInstance(deviceSubscription.FlowName__c, flowParams);
-		if(flow!=null)
-			flow.start();
-
-		// TODO: Think about some kind of logging mode or leave this purely to thd test mode i'm thinking about?
-		// ....
+		else
+		{
+			// Invoke the flow as the running user
+			invokeFlow(deviceSubscription.FlowName__c, flowParams);
+		}
 	}
+
+	/**
+	 * Process an event from a LittleBits device sent via Inbound Email (these are not received in bulk)
+	 *   Envelope contents is assumed to be JSON serialised String, Object map based on the tools standard Flow params
+	 **/
+	global static void processSubscriptionEvent(Messaging.InboundEmail email) {
+		String flowName = email.subject;
+		Map<String, Object> flowParams = (Map<String, Object>) 
+			JSON.deserializeUntyped(email.plainTextBody);
+		invokeFlow(flowName, flowParams);
+	}	
 
 	@TestVisible
 	private static String FlowFactoryClass = 'lbc_LittleBitsFlowFactory';
@@ -319,6 +350,26 @@ global class LittleBitsService {
 	}
 
 	public class LittleBitsServiceException extends Exception {}
+
+	/**
+	 * Dynamically invokes the given flow with the given params
+	 **/
+	private static void invokeFlow(String flowName, Map<String, Object> flowParams) {
+
+		// Process the subscription and forward to a Flow
+		Type typeFactory = Type.forName('', FlowFactoryClass);
+		if(typeFactory==null) {
+			System.debug(FlowFactoryClass + ' class not found.');
+			return;
+		}
+        ILittleBitsFlowFactory flowFactory = (ILittleBitsFlowFactory) typeFactory.newInstance();
+		Flow.Interview flow = flowFactory.newInstance(flowName, flowParams);
+		if(flow!=null)
+			flow.start();
+
+		// TODO: Think about some kind of logging mode or leave this purely to thd test mode i'm thinking about?
+		// ....		
+	}
 
 	/**
 	 * Obtain an instance of the LittleBits Apex Device class (leverages Custom Setting config routes accordingly)

@@ -134,6 +134,18 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>RunAsUser__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>User must be the Context User for an active Inbound Email Service setup in this org called LittleBitsSubscriberInboundEmailHandler and using the LittleBitsSubscriberInboundEmailHandler class from this package.</inlineHelpText>
+        <label>Run As User</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>LittleBits_Device_Subscriptions</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
     <label>LittleBits Device Subscription</label>
     <listViews>
         <fullName>All</fullName>

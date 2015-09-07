@@ -133,6 +133,7 @@ private class LittleBitsServiceTest {
 		reportTrigger.GroupingIndex__c = 0;
 		reportTrigger.AggregateIndexForPercent__c = 1;
 		reportTrigger.AggregateIndexForDuration__c = null;
+		reportTrigger.UniqueName__c = 'Test';		
 		insert reportTrigger;
 		Opportunity opp = new Opportunity();
 		opp.Name = 'Test';
@@ -144,6 +145,42 @@ private class LittleBitsServiceTest {
 		// When
 		Test.startTest();
 		LittleBitsService.runReportTriggers(new Set<Id> { reportTrigger.Id });
+		Test.stopTest();
+
+		// Then
+		System.assertEquals(true, mocksLittleBitsCloudAPI.calloutMade);
+	}
+
+	@IsTest(SeeAllData=true)
+	// Why SeeAllData? https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_analytics_test_reports.htm
+	private static void callRunReportTriggersEnsureACalloutOccursByUniqueName() {
+
+		// Create Mocks
+		MockLittleBitsOutputCloudAPI mocksLittleBitsCloudAPI = new MockLittleBitsOutputCloudAPI();
+		Test.setMock(HttpCalloutMock.class, mocksLittleBitsCloudAPI);
+
+		// Given
+		LittleBitsReportTrigger__c reportTrigger = new LittleBitsReportTrigger__c();
+		reportTrigger.Name = 'Test';
+		reportTrigger.ReportDeveloperName__c = 'ClosedWonOpportunities';
+		reportTrigger.Active__c = true;
+		reportTrigger.DeviceID__c = 'deviceId';
+		reportTrigger.AccessToken__c = 'accessToken';
+		reportTrigger.GroupingIndex__c = 0;
+		reportTrigger.AggregateIndexForPercent__c = 1;
+		reportTrigger.AggregateIndexForDuration__c = null;
+		reportTrigger.UniqueName__c = 'Test';
+		insert reportTrigger;
+		Opportunity opp = new Opportunity();
+		opp.Name = 'Test';
+		opp.StageName = 'Open';
+		opp.CloseDate = System.today();
+		opp.Amount = 10000;
+		insert opp;
+
+		// When
+		Test.startTest();
+		LittleBitsService.runReportTriggers(new Set<String> { reportTrigger.UniqueName__c });
 		Test.stopTest();
 
 		// Then
@@ -164,6 +201,7 @@ private class LittleBitsServiceTest {
 		reportTrigger.GroupingIndex__c = 0;
 		reportTrigger.AggregateIndexForPercent__c = 1;
 		reportTrigger.AggregateIndexForDuration__c = null;
+		reportTrigger.UniqueName__c = 'Test';		
 		insert reportTrigger;
 
 		// When ... Then
