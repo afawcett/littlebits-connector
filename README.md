@@ -23,6 +23,16 @@ Known Issues
 
 - **Using Percent fields**. This is really a platform bug, but applies to the use of Process Builder and Flow with the Action contained in this connector. Basically Salesforce does not pass Percent values correctly to Actions there are several open issues on this topic. Fortunatly there is a workaround that both works now and will be fine to retained once they fix the issue. Pleae refer to my [updated blog here](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/)
 
+Version 1.17 - Release
+----------------------
+
+- Enhancement to run **Report Triggers** from **Process Builder**
+- Enhancement to run Flow's from **Device Subscriptions** under a specific User (not just Guest user)
+
+**Updrade Note:** Add Unique Name to Report Triggers layout and add Run As User to Device Subscription layout.
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000005jPa), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000005jPa)
+
 Version 1.12 - Release
 ----------------------
 
