@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#FF6F00</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>LittleBits Connect</label>
+    <navType>Standard</navType>
+    <tabs>LittleBitsTrigger__c</tabs>
+    <tabs>LittleBitsReportTrigger__c</tabs>
+    <tabs>LittleBitsDeviceSubscription__c</tabs>
+    <tabs>LittleBitsManageFlowFactory</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

@@ -4,6 +4,10 @@
         <application>LittleBitsConnect</application>
         <visible>true</visible>
     </applicationVisibilities>
+    <applicationVisibilities>
+        <application>LittleBitsConnectLEX</application>
+        <visible>true</visible>
+    </applicationVisibilities>
     <fieldPermissions>
         <editable>true</editable>
         <field>LittleBitsDeviceSubscription__c.AccessToken__c</field>

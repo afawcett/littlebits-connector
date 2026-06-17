@@ -2,9 +2,9 @@
 
 Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without code! Based on the **Apex LittleBits API** [here](https://github.com/afawcett/apex-littlebitsapi). Outputs to LittleBits devices when records in standard or custom objects are updated (via Process Builder) or when driven by Salesforce Reports. It can also handle notifications (events) from devices using Salesforce Visual Flow. See the following blogs for more details and examples!
 
-![LittleBits Connector Overview](https://andrewfawcett.files.wordpress.com/2015/08/littlebitsoverview1.png)
+![LittleBits Connector Overview](images/LittleBitsOverview.png)
 
-![LittleBits Connector Tabs](https://raw.githubusercontent.com/afawcett/littlebits-connector/master/images/LittleBitsTabs.png)
+![LittleBits Connector Tabs](images/LittleBitsTabs.png)
 
 - [Exploring IoT with LittleBits and Salesforce #DF15](http://andyinthecloud.com/2015/08/10/exploring-iot-with-littlebits-and-salesforce-df15/)
 - [LittleBits Connector and Process Builder](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/)
@@ -14,7 +14,65 @@ Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without c
 
 # Package Install
 
-You can install this connector as managed "AppExchange" package more easily.
+You can install this connector as managed "AppExchange" package more easily. Package install links (Production and Sandbox) are listed under each version release below — see the [latest version release section](#version-117---release).
+
+![LittleBits Record Trigger](images/LittleBitsTriggerNew.png)
+
+## Local Development
+
+Use the Salesforce CLI to deploy from source to a scratch org. You need a [Dev Hub](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_enable_devhub.htm) enabled org and the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli) installed.
+
+**1. Authenticate to your Dev Hub**
+
+```bash
+sf org login web --alias DevHub --set-default-dev-hub
+```
+
+**2. Create a scratch org**
+
+```bash
+sf org create scratch \
+  --definition-file config/project-scratch-def.json \
+  --alias littlebits-scratch \
+  --duration-days 7 \
+  --set-default
+```
+
+**3. Deploy the package source**
+
+```bash
+sf project deploy start --source-dir force-app
+```
+
+**4. Deploy unpackaged metadata**
+
+The sample report used by Apex tests is not part of the managed package and must be deployed separately:
+
+```bash
+sf project deploy start --source-dir unpackaged
+```
+
+**5. Assign the permission set**
+
+Grant access to the LittleBits Connect app, tabs, and objects:
+
+```bash
+sf org assign permset --name LittleBitsConnect
+```
+
+**6. Run all tests**
+
+```bash
+sf apex run test --test-level RunLocalTests --result-format human --code-coverage --wait 30
+```
+
+**7. Open the org**
+
+```bash
+sf org open
+```
+
+Log in as the scratch org admin user. The **LittleBits Connect** app should be available after the permission set is assigned.
 
 ## Known Issues
 
@@ -63,7 +121,7 @@ Package Install Links [Production URL](https://login.salesforce.com/packaging/in
 
 This version now support [Lightning Process Builder](https://help.salesforce.com/HTViewHelpDoc?id=process_overview.htm), take a look at my [blog post](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/) for more information, have fun!
 
-![LittleBitsProcessBuilder](https://raw.githubusercontent.com/afawcett/littlebits-connector/master/images/LittleBitsProcessBuilder.png)
+![LittleBitsProcessBuilder](images/LittleBitsProcessBuilder.png)
 
 Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004tdG), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004tdG)
 
@@ -73,7 +131,7 @@ Package Install Links [Production URL](https://login.salesforce.com/packaging/in
 
 This version supports **LittleBits Triggers** and allows you to output to a device from any custom or standard object based on a given field or fields changing. The percent and duration of the output can be driven by fields on the record. For example Opportunity object based on the Probability changing updates your device!
 
-![LittleBitsTrigger](https://raw.githubusercontent.com/afawcett/littlebits-connector/master/images/LittleBitsTrigger.png)
+![LittleBitsTrigger](images/LittleBitsTrigger.png)
 
 Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t240000004kmO), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t240000004kmO)
 
@@ -81,28 +139,16 @@ Package Install Links [Production URL](https://login.salesforce.com/packaging/in
 
 # Code
 
-This project uses the [Salesforce DX](https://developer.salesforce.com/tools/sfdxcli) source format. Metadata lives under `force-app/main/default/`.
+This project uses the [Salesforce DX](https://developer.salesforce.com/tools/sfdxcli) source format. Metadata lives under `force-app/main/default/`. See [Local Development](#local-development) above for deploy and test instructions.
 
 ### Prerequisites
 
 - [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
 - Node.js (for formatting and lint tooling)
 
-### Setup
-
 ```bash
 npm install
-sf org login web --alias littlebits-dev
-sf org create scratch --definition-file config/project-scratch-def.json --alias littlebits-scratch --set-default
 ```
-
-### Deploy
-
-```bash
-sf project deploy start --source-dir force-app
-```
-
-The sample report used in tests lives under `unpackaged/reports/` and is not part of the managed package.
 
 ### Regenerate Apex mocks
 
