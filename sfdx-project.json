@@ -1,0 +1,26 @@
+{
+  "packageDirectories": [
+    {
+      "versionNumber": "1.22.0.0",
+      "path": "force-app",
+      "default": true,
+      "package": "LittleBits Connector",
+      "versionDescription": "Helps declaratively connect updates to standard or custom object records to LittleBits Cloud enabled devices.",
+      "ancestorVersion": "1.21.0",
+      "dependencies": []
+    }
+  ],
+  "name": "littlebits-connector",
+  "namespace": "lbc",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "66.0",
+  "packageAliases": {
+    "LittleBits Connector": "0HoKg000000KyjkKAC",
+    "LittleBits Connector@1.18.0-1-main": "04tKg000000omPLIAY",
+    "LittleBits Connector@1.20.0-1-main": "04tKg000000omPaIAI",
+    "LittleBits Connector@1.21.0-1-main": "04tKg000000omPkIAI",
+    "LittleBits Connector@1.21.0-2-main": "04tKg000000omPpIAI",
+    "LittleBits Connector@1.21.0-3-main": "04tKg000000omPuIAI",
+    "LittleBits Connector@1.21.0-5-main": "04tKg000000omQEIAY"
+  }
+}
