@@ -14,7 +14,7 @@ Connect [LittleBits devices](http://littlebits.cc/cloud) to Salesforce without c
 
 # Package Install
 
-You can install this connector as managed "AppExchange" package more easily. Package install links (Production and Sandbox) are listed under each version release below — see the [latest version release section](#version-117---release).
+You can install this connector as managed "AppExchange" package more easily. Package install links (Production and Sandbox) are listed under each version release below — see the [latest version release section](#version-122---release).
 
 ![LittleBits Record Trigger](images/LittleBitsTriggerNew.png)
 
@@ -77,6 +77,34 @@ Log in as the scratch org admin user. The **LittleBits Connect** app should be a
 ## Known Issues
 
 - **Using Percent fields**. This is really a platform bug, but applies to the use of Process Builder and Flow with the Action contained in this connector. Basically Salesforce does not pass Percent values correctly to Actions there are several open issues on this topic. Fortunatly there is a workaround that both works now and will be fine to retained once they fix the issue. Pleae refer to my [updated blog here](http://andyinthecloud.com/2015/01/31/controlling-internet-devices-via-lightning-process-builder/)
+
+## Version 1.22 - Release
+
+- **LittleBits Connect** Lightning app for easier navigation to tabs and features
+- Salesforce DX project layout for local development and second-generation managed packaging
+- Report trigger test reliability improvements
+
+**Upgrade Note:** If you are on a first-generation managed package version earlier than 1.21, you **must upgrade to [version 1.21](#version-121---release) first** before installing this release. You cannot upgrade directly from 1.17 (or earlier) to 1.22.
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tKg000000omQOIAY), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tKg000000omQOIAY)
+
+## Version 1.21 - Release
+
+This release migrates the connector to a **second-generation managed package (2GP)**. Existing subscribers on first-generation managed packaging must follow the upgrade path below — you cannot skip this version.
+
+**Upgrade path from first-generation managed packaging:**
+
+1. Upgrade the installed first-generation package to **version 1.21** (1GP)
+2. Install the **version 1.21** second-generation managed package (2GP) — this completes the migration
+3. Upgrade to [version 1.22](#version-122---release) (or later) as needed
+
+**1GP version 1.21** (required before installing the 2GP package):
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04td2000000OHu9), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04td2000000OHu9)
+
+**2GP version 1.21** (migration package — no installation key required):
+
+Package Install Links [Production URL](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tKg000000omPkIAI), [Sandbox URL](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tKg000000omPkIAI)
 
 ## Version 1.17 - Release
 

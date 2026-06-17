@@ -1,13 +1,21 @@
 {
   "packageDirectories": [
     {
-      "versionNumber": "1.22.0.0",
+      "versionNumber": "1.23.0.0",
       "path": "force-app",
       "default": true,
       "package": "LittleBits Connector",
       "versionDescription": "Helps declaratively connect updates to standard or custom object records to LittleBits Cloud enabled devices.",
-      "ancestorVersion": "1.21.0",
+      "ancestorVersion": "1.22.0",
+      "definitionFile": "config/project-scratch-def.json",
+      "unpackagedMetadata": {
+        "path": "unpackaged"
+      },
       "dependencies": []
+    },
+    {
+      "path": "unpackaged",
+      "default": false
     }
   ],
   "name": "littlebits-connector",
@@ -21,6 +29,7 @@
     "LittleBits Connector@1.21.0-1-main": "04tKg000000omPkIAI",
     "LittleBits Connector@1.21.0-2-main": "04tKg000000omPpIAI",
     "LittleBits Connector@1.21.0-3-main": "04tKg000000omPuIAI",
-    "LittleBits Connector@1.21.0-5-main": "04tKg000000omQEIAY"
+    "LittleBits Connector@1.21.0-5-main": "04tKg000000omQEIAY",
+    "LittleBits Connector@1.22.0": "04tKg000000omQOIAY"
   }
 }
